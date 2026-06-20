@@ -1,0 +1,11 @@
+"workshopitem"
+{
+	"appid"		"3569500"
+	"publishedfileid"		"0"
+	"contentfolder"		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Card Shop Simulator Multiplayer\\CardShopSim\\Mods\\BaseEconomyBalance"
+	"previewfile"		"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Card Shop Simulator Multiplayer\\CardShopSim\\Mods\\BaseEconomyBalance\\workshop.jpg"
+	"visibility"		"0"
+	"title"		"Base Economy Balance"
+	"description"		"Retunes base card values so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement."
+	"changenote"		"version 0.4.0"
+}

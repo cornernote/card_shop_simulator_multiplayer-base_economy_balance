@@ -1,5 +1,7 @@
 # Base Economy Balance
 
+![Base Economy Balance preview](preview.png)
+
 `BaseEconomyBalance` retunes base card values in Card Shop Simulator Multiplayer so opening packs feels more rewarding without changing card art, names, rarity, stats, elements, or pack placement.
 
 The mod is designed to work with the vanilla card pool and with visual replacement mods such as `GenMTG`.
@@ -46,4 +48,3 @@ It applies once on init and again after a short delay so it can win over other i
 ## Notes
 
 The safe Lua registry surface does not expose pack drop tables, final card instance pricing, frame weights, or premium variant odds. The mod balances the editable base card value only.
-

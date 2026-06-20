@@ -1,0 +1,33 @@
+[h1]Base Economy Balance[/h1]
+
+[b]Base Economy Balance[/b] retunes card values so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement.
+
+[h2]=== FEATURES ===[/h2]
+
+[list]
+[*][b]Fun pack-opening balance[/b] - standard packs should feel worth opening instead of feeling like constant misses.
+[*][b]Smoother card values[/b] - commons, uncommons, rares, and super rares scale more cleanly across gens 1-7.
+[*][b]Chase cards preserved[/b] - rare, super rare, god, holiday, and souvenir cards still matter.
+[*][b]Visual-mod friendly[/b] - works with card art/name replacement mods because it only changes base card value multipliers.
+[*][b]Safe registry usage[/b] - uses the known safe card registry methods and avoids unsafe object reflection.
+[/list]
+
+[h2]=== BALANCE TARGET ===[/h2]
+
+The goal is not strict anti-profit balance. The goal is that opening packs is fun:
+
+[list]
+[*]Standard packs can make a bit extra versus purchase cost.
+[*]Opened cards should usually still be below sealed pack market value.
+[*]Rare and super-rare pulls should feel good.
+[*]Luxury and rare luxury packs stay higher variance because the game uses hidden premium/foil/frame multipliers.
+[/list]
+
+[h2]=== COMPATIBILITY ===[/h2]
+
+This mod preserves card identity and only changes [b]CardValueMulti[/b]. It should work with vanilla cards and visual replacement mods such as GenMTG.
+
+[h2]=== NOTES ===[/h2]
+
+The game does not currently expose pack drop tables, final card instance pricing, frame weights, or premium variant odds through the safe Lua registry surface. This mod balances the editable base card values only.
+

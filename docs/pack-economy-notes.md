@@ -96,7 +96,7 @@ Current working target for premium packs:
 
 ## Current Balanced Value Estimate
 
-The current model is no longer a simple card-value estimate. Version `0.7.1`
+The current model is no longer a simple card-value estimate. Version `0.8.0`
 sets:
 
 - per-card `CardValueMulti`
@@ -119,13 +119,42 @@ It mirrors the mod constants from `main.lua` and reads
 `GenMTG/docs/current-card-inventory.tsv`. Treat its output as a tuning guide,
 then confirm with in-game pack samples.
 
-The immediate test target for `0.7.1` is:
+The immediate test target for `0.8.0` is:
 
 | Pack Type | Desired Feel |
 | --- | --- |
 | Standard | Usually around purchase cost to modestly profitable, still below sealed market value |
 | Luxury | Fewer bad misses, often near cost, occasional strong profit |
 | Rare Luxury | Still swingy, but less pure disaster-or-jackpot |
+
+The current theoretical EV estimate is:
+
+| Generation | Standard EV | Luxury EV | Rare Luxury EV |
+| --- | ---: | ---: | ---: |
+| Gen 1 | 2.83 | 198.60 | 1862.42 |
+| Gen 2 | 6.10 | 270.87 | 1067.61 |
+| Gen 3 | 10.61 | 464.97 | 1852.00 |
+| Gen 4 | 15.62 | 666.47 | 2681.19 |
+| Gen 5 | 21.29 | 877.29 | 3494.85 |
+| Gen 6 | 25.69 | 1042.20 | 4048.70 |
+| Gen 7 | 32.62 | 1378.71 | 5398.95 |
+
+Against purchase cost:
+
+| Generation | Standard | Luxury | Rare Luxury |
+| --- | ---: | ---: | ---: |
+| Gen 1 | -5.8% | +32.4% | +24.2% |
+| Gen 2 | +1.7% | -9.7% | +6.8% |
+| Gen 3 | +17.9% | +3.3% | -58.8% |
+| Gen 4 | +30.2% | +11.1% | -55.3% |
+| Gen 5 | +41.9% | +17.0% | -53.4% |
+| Gen 6 | +42.7% | +15.8% | -55.0% |
+| Gen 7 | +55.3% | +31.3% | -48.6% |
+
+Rare luxury cannot be made close to break-even for every generation with one
+global drop table, because Gen 3-7 rare luxury pack costs rise much faster than
+the global generation multiplier. Version `0.8.0` keeps rare luxury as a chase
+pack instead of raising all high-rarity cards enough to break shelf-sale balance.
 
 ## Public Modding Guide Findings
 
@@ -215,16 +244,16 @@ meaningful hits.
 | Generation | Common Avg | Uncommon Avg | Rare Avg | Super Rare Avg |
 | --- | ---: | ---: | ---: | ---: |
 | Gen 1 | 0.67 | 1.23 | 4.01 | 9.05 |
-| Gen 2 | 0.99 | 1.79 | 5.01 | 10.17 |
-| Gen 3 | 1.39 | 2.46 | 6.07 | 12.49 |
-| Gen 4 | 1.78 | 3.19 | 6.79 | 14.30 |
-| Gen 5 | 2.18 | 3.63 | 7.92 | 15.58 |
-| Gen 6 | 2.38 | 4.00 | 9.05 | 15.77 |
-| Gen 7 | 2.67 | 4.52 | 10.39 | 18.45 |
+| Gen 2 | 0.73 | 1.37 | 4.40 | 9.41 |
+| Gen 3 | 0.87 | 1.60 | 4.83 | 10.91 |
+| Gen 4 | 0.99 | 1.86 | 4.96 | 11.88 |
+| Gen 5 | 1.11 | 1.91 | 5.44 | 12.36 |
+| Gen 6 | 1.11 | 1.92 | 5.91 | 11.85 |
+| Gen 7 | 1.17 | 2.05 | 6.54 | 13.57 |
 
 ## Current Drop Rates, Rarity Values, And Trait Values
 
-Version `0.7.1` registers pack rarity rates, trait rates, global rarity values,
+Version `0.8.0` registers pack rarity rates, trait rates, global rarity values,
 and global trait values. This was learned from two sample mods:
 
 - `_sample/3639546917` uses `RegisterRarityValueData` and
@@ -253,14 +282,15 @@ for our notes is:
 
 | Pack Tier | Common | Uncommon | Rare | Super Rare | God |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Standard | 0.720 | 0.230 | 0.045 | 0.005 | 0.000 |
-| Luxury | 0.150 | 0.350 | 0.400 | 0.095 | 0.005 |
-| Rare Luxury | 0.000 | 0.050 | 0.500 | 0.400 | 0.050 |
+| Standard | 0.950 | 0.040 | 0.009 | 0.001 | 0.000 |
+| Luxury | 0.080 | 0.320 | 0.470 | 0.115 | 0.005 |
+| Rare Luxury | 0.000 | 0.020 | 0.350 | 0.530 | 0.100 |
 
 Standard packs remain mostly common/uncommon, with occasional rare hits. Luxury
 and rare luxury packs are shifted away from pure low-rarity misses while keeping
-rare luxury high variance. Version `0.7.1` raises rare luxury EV by moving a
-small amount of weight from uncommon/rare into super rare/god.
+rare luxury high variance. Version `0.8.0` makes standard packs common-heavy
+again so low-cost packs do not print money, while rare luxury leans harder into
+super rare/god chase pulls.
 
 ### Rarity Values
 
@@ -278,15 +308,16 @@ by the game's global rarity table.
 
 | Rarity | Balanced Value |
 | --- | ---: |
-| Common | 0.80 |
-| Uncommon | 1.00 |
-| Rare | 2.00 |
-| Super Rare | 8.00 |
+| Common | 0.30 |
+| Uncommon | 0.45 |
+| Rare | 1.70 |
+| Super Rare | 7.50 |
 | God | 35.00 |
 
-Commons are lifted the most because common-heavy standard packs were the main
-source of constant misses. Super rare and god values are also made explicit so
-premium jackpot values are less dependent on unknown vanilla defaults.
+Commons are still above vanilla, but much lower than earlier tuning passes.
+This keeps common-heavy standard packs playable without making them an obvious
+cash exploit. Super rare and god values remain explicit so premium jackpot
+values are less dependent on unknown vanilla defaults.
 
 ### Trait Values
 
@@ -296,11 +327,11 @@ for every rarity. `BaseEconomyBalance` uses a smoother table instead:
 
 | Rarity | Basic | Silver | Gold | Holographic | Shiny | Legendary |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Common | 0.760 | 0.180 | 0.050 | 0.010 | 0.000 | 0.000 |
-| Uncommon | 0.600 | 0.250 | 0.100 | 0.040 | 0.010 | 0.000 |
-| Rare | 0.350 | 0.300 | 0.200 | 0.100 | 0.040 | 0.010 |
-| Super Rare | 0.200 | 0.250 | 0.250 | 0.180 | 0.090 | 0.030 |
-| God | 0.100 | 0.150 | 0.250 | 0.250 | 0.150 | 0.100 |
+| Common | 0.820 | 0.140 | 0.035 | 0.005 | 0.000 | 0.000 |
+| Uncommon | 0.680 | 0.220 | 0.080 | 0.018 | 0.002 | 0.000 |
+| Rare | 0.450 | 0.300 | 0.170 | 0.060 | 0.018 | 0.002 |
+| Super Rare | 0.300 | 0.280 | 0.220 | 0.140 | 0.050 | 0.010 |
+| God | 0.160 | 0.200 | 0.270 | 0.220 | 0.110 | 0.040 |
 
 This should make premium packs less binary by giving higher-rarity pulls a
 healthier spread of good frames while keeping legendary frames uncommon.
@@ -321,11 +352,11 @@ The sample mod uses this steeper trait curve:
 | Trait | Balanced Value |
 | --- | ---: |
 | Basic | 1.00 |
-| Silver | 1.50 |
-| Gold | 3.00 |
-| Holographic | 6.00 |
-| Shiny | 10.00 |
-| Legendary | 18.00 |
+| Silver | 1.35 |
+| Gold | 2.20 |
+| Holographic | 3.60 |
+| Shiny | 5.50 |
+| Legendary | 9.00 |
 
 This should make luxury and rare luxury packs less dominated by the top premium
 frames while keeping premium pulls exciting.
@@ -365,7 +396,7 @@ weights, stat rolls, or final price formula.
 ## Observed Pack Samples
 
 The observed premium-pack samples below were captured under earlier
-`BaseEconomyBalance` tuning passes before `0.7.1`. Version `0.7.1` sets pack
+`BaseEconomyBalance` tuning passes before `0.8.0`. Version `0.8.0` sets pack
 rarity rates, trait rates, rarity values, trait values, and base values for a
 more fun pack-opening experience, so these samples are useful for understanding
 pack behavior but should be retested before treating the ROI numbers as current.
@@ -448,7 +479,7 @@ observed 19250.00 pull is large enough to determine the whole sample. Treat Gen
 
 ## Balance Interpretation
 
-With the current `0.7.1` value curve and pack odds, standard packs made mostly from commons
+With the current `0.8.0` value curve and pack odds, standard packs made mostly from commons
 and uncommons are expected to be close to purchase-cost break-even or modestly
 profitable. They should still usually be below the sealed pack's 2x market
 value.
@@ -457,7 +488,7 @@ This intentionally shifts the mod away from strict anti-flip balance and toward
 fun pack opening. The player should usually feel like opening packs was worth
 doing, while sealed packs still retain a meaningful market-value advantage.
 
-All pack types need fresh samples under `0.7.1`. The old screenshots showed that
+All pack types need fresh samples under `0.8.0`. The old screenshots showed that
 luxury and rare luxury packs use hidden premium/foil multipliers, but the exact
 current ROI changed when base values, rarity values, trait values, pack rarity
 rates, and trait rates were smoothed.

@@ -31,34 +31,34 @@ RARITY_NAMES = {
 }
 
 RARITY_VALUES = {
-    0: 0.80,
-    1: 1.00,
-    2: 2.00,
-    3: 8.00,
+    0: 0.30,
+    1: 0.45,
+    2: 1.70,
+    3: 7.50,
     4: 35.00,
 }
 
 TRAIT_VALUES = {
     "basic": 1.00,
-    "silver": 1.50,
-    "gold": 3.00,
-    "holographic": 6.00,
-    "shiny": 10.00,
-    "legendary": 18.00,
+    "silver": 1.35,
+    "gold": 2.20,
+    "holographic": 3.60,
+    "shiny": 5.50,
+    "legendary": 9.00,
 }
 
 TRAIT_RATES = {
-    0: {"basic": 0.76, "silver": 0.18, "gold": 0.05, "holographic": 0.01, "shiny": 0.0, "legendary": 0.0},
-    1: {"basic": 0.60, "silver": 0.25, "gold": 0.10, "holographic": 0.04, "shiny": 0.01, "legendary": 0.0},
-    2: {"basic": 0.35, "silver": 0.30, "gold": 0.20, "holographic": 0.10, "shiny": 0.04, "legendary": 0.01},
-    3: {"basic": 0.20, "silver": 0.25, "gold": 0.25, "holographic": 0.18, "shiny": 0.09, "legendary": 0.03},
-    4: {"basic": 0.10, "silver": 0.15, "gold": 0.25, "holographic": 0.25, "shiny": 0.15, "legendary": 0.10},
+    0: {"basic": 0.82, "silver": 0.14, "gold": 0.035, "holographic": 0.005, "shiny": 0.0, "legendary": 0.0},
+    1: {"basic": 0.68, "silver": 0.22, "gold": 0.08, "holographic": 0.018, "shiny": 0.002, "legendary": 0.0},
+    2: {"basic": 0.45, "silver": 0.30, "gold": 0.17, "holographic": 0.06, "shiny": 0.018, "legendary": 0.002},
+    3: {"basic": 0.30, "silver": 0.28, "gold": 0.22, "holographic": 0.14, "shiny": 0.05, "legendary": 0.01},
+    4: {"basic": 0.16, "silver": 0.20, "gold": 0.27, "holographic": 0.22, "shiny": 0.11, "legendary": 0.04},
 }
 
 PACK_RATES = {
-    "standard": {0: 0.72, 1: 0.23, 2: 0.045, 3: 0.005, 4: 0.0},
-    "luxury": {0: 0.15, 1: 0.35, 2: 0.40, 3: 0.095, 4: 0.005},
-    "rare_luxury": {0: 0.0, 1: 0.05, 2: 0.50, 3: 0.40, 4: 0.05},
+    "standard": {0: 0.95, 1: 0.04, 2: 0.009, 3: 0.001, 4: 0.0},
+    "luxury": {0: 0.08, 1: 0.32, 2: 0.47, 3: 0.115, 4: 0.005},
+    "rare_luxury": {0: 0.0, 1: 0.02, 2: 0.35, 3: 0.53, 4: 0.10},
 }
 
 
@@ -102,13 +102,13 @@ def balanced_value(card_id: int, rarity: int, current: float) -> float:
     gen = generation_index(card_id)
 
     if rarity == 0:
-        return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.30 * gen), 0.85 + (0.42 * gen)))
+        return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.08 * gen), 0.85 + (0.12 * gen)))
     if rarity == 1:
-        return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.52 * gen), 1.55 + (0.65 * gen)))
+        return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.14 * gen), 1.55 + (0.18 * gen)))
     if rarity == 2:
-        return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.85 * gen), 5.75 + (1.05 * gen)))
+        return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.28 * gen), 5.75 + (0.35 * gen)))
     if rarity == 3:
-        return round2(scale_clamped(current, 1.00, 1.90, 8.50 + (1.15 * gen), 14.00 + (1.45 * gen)))
+        return round2(scale_clamped(current, 1.00, 1.90, 8.50 + (0.40 * gen), 14.00 + (0.55 * gen)))
 
     return round2(current)
 

@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.7.1",
+    version     = "0.8.0",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -118,16 +118,15 @@ local function apply_trait_values(registry)
         return 0
     end
 
-    -- These values smooth premium frame variance. The sample mod in
-    -- _sample/3639546917 uses 1, 2, 5, 10, 20, 35; this gentler curve keeps
-    -- premium cards exciting without letting the top frame dominate pack EV.
+    -- These values smooth premium frame variance. Vanilla uses much larger
+    -- multipliers for shiny/legendary frames, which made pack EV spike too hard.
     local trait_values = {
         { UE.ETrait.Basic, 1.00 },
-        { UE.ETrait.Silver, 1.50 },
-        { UE.ETrait.Gold, 3.00 },
-        { UE.ETrait.Holographic, 6.00 },
-        { UE.ETrait.Shiny, 10.00 },
-        { UE.ETrait.Legendary, 18.00 },
+        { UE.ETrait.Silver, 1.35 },
+        { UE.ETrait.Gold, 2.20 },
+        { UE.ETrait.Holographic, 3.60 },
+        { UE.ETrait.Shiny, 5.50 },
+        { UE.ETrait.Legendary, 9.00 },
     }
 
     local changed = 0
@@ -149,13 +148,13 @@ local function apply_rarity_values(registry)
         return 0
     end
 
-    -- Final card prices also use a global rarity table. Commons appear to be
-    -- heavily discounted by default, which made standard packs miss too hard.
+    -- Final card prices also use a global rarity table. These values keep
+    -- common-heavy standard packs alive without letting low-cost packs print money.
     local rarity_values = {
-        { UE.ECardRarity.Common, 0.80 },
-        { UE.ECardRarity.UnCommon, 1.00 },
-        { UE.ECardRarity.Rare, 2.00 },
-        { UE.ECardRarity.SuperRare, 8.00 },
+        { UE.ECardRarity.Common, 0.30 },
+        { UE.ECardRarity.UnCommon, 0.45 },
+        { UE.ECardRarity.Rare, 1.70 },
+        { UE.ECardRarity.SuperRare, 7.50 },
         { UE.ECardRarity.God, 35.00 },
     }
 
@@ -184,20 +183,20 @@ local function apply_pack_rarity_rates(registry)
         {
             0,
             {
-                [UE.ECardRarity.Common] = 0.72,
-                [UE.ECardRarity.UnCommon] = 0.23,
-                [UE.ECardRarity.Rare] = 0.045,
-                [UE.ECardRarity.SuperRare] = 0.005,
+                [UE.ECardRarity.Common] = 0.95,
+                [UE.ECardRarity.UnCommon] = 0.04,
+                [UE.ECardRarity.Rare] = 0.009,
+                [UE.ECardRarity.SuperRare] = 0.001,
                 [UE.ECardRarity.God] = 0.0,
             },
         },
         {
             1,
             {
-                [UE.ECardRarity.Common] = 0.15,
-                [UE.ECardRarity.UnCommon] = 0.35,
-                [UE.ECardRarity.Rare] = 0.40,
-                [UE.ECardRarity.SuperRare] = 0.095,
+                [UE.ECardRarity.Common] = 0.08,
+                [UE.ECardRarity.UnCommon] = 0.32,
+                [UE.ECardRarity.Rare] = 0.47,
+                [UE.ECardRarity.SuperRare] = 0.115,
                 [UE.ECardRarity.God] = 0.005,
             },
         },
@@ -205,10 +204,10 @@ local function apply_pack_rarity_rates(registry)
             2,
             {
                 [UE.ECardRarity.Common] = 0.0,
-                [UE.ECardRarity.UnCommon] = 0.05,
-                [UE.ECardRarity.Rare] = 0.50,
-                [UE.ECardRarity.SuperRare] = 0.40,
-                [UE.ECardRarity.God] = 0.05,
+                [UE.ECardRarity.UnCommon] = 0.02,
+                [UE.ECardRarity.Rare] = 0.35,
+                [UE.ECardRarity.SuperRare] = 0.53,
+                [UE.ECardRarity.God] = 0.10,
             },
         },
     }
@@ -236,10 +235,10 @@ local function apply_trait_rates(registry)
         {
             UE.ECardRarity.Common,
             {
-                [UE.ETrait.Basic] = 0.76,
-                [UE.ETrait.Silver] = 0.18,
-                [UE.ETrait.Gold] = 0.05,
-                [UE.ETrait.Holographic] = 0.01,
+                [UE.ETrait.Basic] = 0.82,
+                [UE.ETrait.Silver] = 0.14,
+                [UE.ETrait.Gold] = 0.035,
+                [UE.ETrait.Holographic] = 0.005,
                 [UE.ETrait.Shiny] = 0.0,
                 [UE.ETrait.Legendary] = 0.0,
             },
@@ -247,45 +246,45 @@ local function apply_trait_rates(registry)
         {
             UE.ECardRarity.UnCommon,
             {
-                [UE.ETrait.Basic] = 0.60,
-                [UE.ETrait.Silver] = 0.25,
-                [UE.ETrait.Gold] = 0.10,
-                [UE.ETrait.Holographic] = 0.04,
-                [UE.ETrait.Shiny] = 0.01,
+                [UE.ETrait.Basic] = 0.68,
+                [UE.ETrait.Silver] = 0.22,
+                [UE.ETrait.Gold] = 0.08,
+                [UE.ETrait.Holographic] = 0.018,
+                [UE.ETrait.Shiny] = 0.002,
                 [UE.ETrait.Legendary] = 0.0,
             },
         },
         {
             UE.ECardRarity.Rare,
             {
-                [UE.ETrait.Basic] = 0.35,
+                [UE.ETrait.Basic] = 0.45,
                 [UE.ETrait.Silver] = 0.30,
-                [UE.ETrait.Gold] = 0.20,
-                [UE.ETrait.Holographic] = 0.10,
-                [UE.ETrait.Shiny] = 0.04,
-                [UE.ETrait.Legendary] = 0.01,
+                [UE.ETrait.Gold] = 0.17,
+                [UE.ETrait.Holographic] = 0.06,
+                [UE.ETrait.Shiny] = 0.018,
+                [UE.ETrait.Legendary] = 0.002,
             },
         },
         {
             UE.ECardRarity.SuperRare,
             {
-                [UE.ETrait.Basic] = 0.20,
-                [UE.ETrait.Silver] = 0.25,
-                [UE.ETrait.Gold] = 0.25,
-                [UE.ETrait.Holographic] = 0.18,
-                [UE.ETrait.Shiny] = 0.09,
-                [UE.ETrait.Legendary] = 0.03,
+                [UE.ETrait.Basic] = 0.30,
+                [UE.ETrait.Silver] = 0.28,
+                [UE.ETrait.Gold] = 0.22,
+                [UE.ETrait.Holographic] = 0.14,
+                [UE.ETrait.Shiny] = 0.05,
+                [UE.ETrait.Legendary] = 0.01,
             },
         },
         {
             UE.ECardRarity.God,
             {
-                [UE.ETrait.Basic] = 0.10,
-                [UE.ETrait.Silver] = 0.15,
-                [UE.ETrait.Gold] = 0.25,
-                [UE.ETrait.Holographic] = 0.25,
-                [UE.ETrait.Shiny] = 0.15,
-                [UE.ETrait.Legendary] = 0.10,
+                [UE.ETrait.Basic] = 0.16,
+                [UE.ETrait.Silver] = 0.20,
+                [UE.ETrait.Gold] = 0.27,
+                [UE.ETrait.Holographic] = 0.22,
+                [UE.ETrait.Shiny] = 0.11,
+                [UE.ETrait.Legendary] = 0.04,
             },
         },
     }
@@ -330,19 +329,19 @@ local function balanced_value(card_id, rarity, current)
     local gen = generation_index(card_id)
 
     if rarity == 0 then
-        return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.30 * gen), 0.85 + (0.42 * gen)))
+        return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.08 * gen), 0.85 + (0.12 * gen)))
     end
 
     if rarity == 1 then
-        return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.52 * gen), 1.55 + (0.65 * gen)))
+        return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.14 * gen), 1.55 + (0.18 * gen)))
     end
 
     if rarity == 2 then
-        return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.85 * gen), 5.75 + (1.05 * gen)))
+        return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.28 * gen), 5.75 + (0.35 * gen)))
     end
 
     if rarity == 3 then
-        return round2(scale_clamped(current, 1.00, 1.90, 8.50 + (1.15 * gen), 14.00 + (1.45 * gen)))
+        return round2(scale_clamped(current, 1.00, 1.90, 8.50 + (0.40 * gen), 14.00 + (0.55 * gen)))
     end
 
     return round2(current)

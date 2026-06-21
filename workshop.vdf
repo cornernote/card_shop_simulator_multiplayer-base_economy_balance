@@ -7,5 +7,5 @@
 	"visibility"		"0"
 	"title"		"Base Economy Balance"
 	"description"		"Retunes base card values, pack rarity odds, rarity multipliers, and premium traits so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement."
-	"changenote"		"version 0.8.0: balances standard and luxury EV while keeping rare luxury as a chase tier"
+	"changenote"		"version 0.8.1: raises Gen 1-3 common/uncommon floors to reduce low-gen standard misses"
 }

@@ -122,8 +122,12 @@ def balanced_value(card_id: int, rarity: int, current: float) -> float:
     gen = generation_index(card_id)
 
     if rarity == 0:
+        if gen <= 2:
+            return round2(scale_clamped(current, 0.85, 1.40, 0.85 + (0.18 * gen), 1.25 + (0.22 * gen)))
         return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.08 * gen), 0.85 + (0.12 * gen)))
     if rarity == 1:
+        if gen <= 2:
+            return round2(scale_clamped(current, 0.84, 1.60, 1.30 + (0.28 * gen), 2.00 + (0.35 * gen)))
         return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.14 * gen), 1.55 + (0.18 * gen)))
     if rarity == 2:
         return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.28 * gen), 5.75 + (0.35 * gen)))

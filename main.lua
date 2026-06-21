@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.8.0",
+    version     = "0.8.1",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -329,10 +329,16 @@ local function balanced_value(card_id, rarity, current)
     local gen = generation_index(card_id)
 
     if rarity == 0 then
+        if gen <= 2 then
+            return round2(scale_clamped(current, 0.85, 1.40, 0.85 + (0.18 * gen), 1.25 + (0.22 * gen)))
+        end
         return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.08 * gen), 0.85 + (0.12 * gen)))
     end
 
     if rarity == 1 then
+        if gen <= 2 then
+            return round2(scale_clamped(current, 0.84, 1.60, 1.30 + (0.28 * gen), 2.00 + (0.35 * gen)))
+        end
         return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.14 * gen), 1.55 + (0.18 * gen)))
     end
 

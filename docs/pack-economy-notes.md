@@ -125,7 +125,7 @@ Current working target for premium packs:
 
 ## Current Balanced Value Estimate
 
-The current model is no longer a simple card-value estimate. Version `0.8.0`
+The current model is no longer a simple card-value estimate. Version `0.8.1`
 sets:
 
 - per-card `CardValueMulti`
@@ -148,7 +148,7 @@ It mirrors the mod constants from `main.lua` and reads
 `GenMTG/docs/current-card-inventory.tsv`. Treat its output as a tuning guide,
 then confirm with in-game pack samples.
 
-The immediate test target for `0.8.0` is:
+The immediate test target for `0.8.1` is:
 
 | Pack Type | Desired Feel |
 | --- | --- |
@@ -160,9 +160,9 @@ The current theoretical EV estimate is:
 
 | Generation | Standard EV | Luxury EV | Rare Luxury EV |
 | --- | ---: | ---: | ---: |
-| Gen 1 | 2.83 | 198.60 | 1862.42 |
-| Gen 2 | 6.10 | 270.87 | 1067.61 |
-| Gen 3 | 10.61 | 464.97 | 1852.00 |
+| Gen 1 | 3.64 | 199.12 | 1862.45 |
+| Gen 2 | 8.14 | 272.27 | 1067.69 |
+| Gen 3 | 14.31 | 467.66 | 1852.16 |
 | Gen 4 | 15.62 | 666.47 | 2681.19 |
 | Gen 5 | 21.29 | 877.29 | 3494.85 |
 | Gen 6 | 25.69 | 1042.20 | 4048.70 |
@@ -172,9 +172,9 @@ Against purchase cost:
 
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
-| Gen 1 | -5.8% | +32.4% | +24.2% |
-| Gen 2 | +1.7% | -9.7% | -64.4% |
-| Gen 3 | +17.9% | +3.3% | -58.8% |
+| Gen 1 | +21.2% | +32.7% | +24.2% |
+| Gen 2 | +35.7% | -9.2% | -64.4% |
+| Gen 3 | +59.0% | +3.9% | -58.8% |
 | Gen 4 | +30.2% | +11.1% | -55.3% |
 | Gen 5 | +41.9% | +17.0% | -53.4% |
 | Gen 6 | +42.7% | +15.8% | -55.0% |
@@ -184,9 +184,9 @@ Against sealed market value:
 
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
-| Gen 1 | -52.9% | -11.7% | +3.5% |
-| Gen 2 | -49.2% | -39.8% | -70.3% |
-| Gen 3 | -41.0% | -31.1% | -65.7% |
+| Gen 1 | -39.4% | -11.5% | +3.5% |
+| Gen 2 | -32.1% | -39.5% | -70.3% |
+| Gen 3 | -20.5% | -30.7% | -65.7% |
 | Gen 4 | -34.9% | -25.9% | -62.8% |
 | Gen 5 | -29.0% | -22.0% | -61.2% |
 | Gen 6 | -28.6% | -22.8% | -62.5% |
@@ -194,8 +194,11 @@ Against sealed market value:
 
 Rare luxury cannot be made close to break-even for every generation with one
 global drop table, because Gen 3-7 rare luxury pack costs rise much faster than
-the global generation multiplier. Version `0.8.0` keeps rare luxury as a chase
+the global generation multiplier. Version `0.8.1` keeps rare luxury as a chase
 pack instead of raising all high-rarity cards enough to break shelf-sale balance.
+Version `0.8.1` also raises only Gen 1-3 common/uncommon base floors because
+observed standard packs were too low while late-game standard, luxury, and rare
+luxury were closer to target.
 
 Special pool EV estimates below assume a 6-card pack drawn evenly from that
 special pool. They are not confirmed pack EV because the safe registry surface
@@ -242,7 +245,7 @@ Special pack buckets use `Gen` values that do not mean price generations:
 | 10 | Holiday/Halloween special pool |
 
 The Baijiaoling check confirms this. In-game market value for foil Baijiaoling
-under `0.8.0` is `945`, which matches:
+under the current `0.8.x` tuning is `945`, which matches:
 
 ```text
 14 CardValueMulti * 7.5 SuperRare value * 9 Legendary/Foil value = 945
@@ -315,9 +318,9 @@ meaningful hits.
 
 | Generation | Common Avg | Uncommon Avg | Rare Avg | Super Rare Avg |
 | --- | ---: | ---: | ---: | ---: |
-| Gen 1 | 0.67 | 1.23 | 4.01 | 9.05 |
-| Gen 2 | 0.73 | 1.37 | 4.40 | 9.41 |
-| Gen 3 | 0.87 | 1.60 | 4.83 | 10.91 |
+| Gen 1 | 1.07 | 1.66 | 4.01 | 9.05 |
+| Gen 2 | 1.23 | 1.95 | 4.40 | 9.41 |
+| Gen 3 | 1.47 | 2.34 | 4.83 | 10.91 |
 | Gen 4 | 0.99 | 1.86 | 4.96 | 11.88 |
 | Gen 5 | 1.11 | 1.91 | 5.44 | 12.36 |
 | Gen 6 | 1.11 | 1.92 | 5.91 | 11.85 |
@@ -325,7 +328,7 @@ meaningful hits.
 
 ## Current Drop Rates, Rarity Values, And Trait Values
 
-Version `0.8.0` registers pack rarity rates, trait rates, global rarity values,
+Version `0.8.1` registers pack rarity rates, trait rates, global rarity values,
 and global trait values. This was learned from two sample mods:
 
 - `_sample/3639546917` uses `RegisterRarityValueData` and
@@ -360,7 +363,7 @@ for our notes is:
 
 Standard packs remain mostly common/uncommon, with occasional rare hits. Luxury
 and rare luxury packs are shifted away from pure low-rarity misses while keeping
-rare luxury high variance. Version `0.8.0` makes standard packs common-heavy
+rare luxury high variance. Version `0.8.1` keeps standard packs common-heavy
 again so low-cost packs do not print money, while rare luxury leans harder into
 super rare/god chase pulls.
 
@@ -492,7 +495,7 @@ Interpretation:
 - Gen 2 Rare Luxury is below cost after correcting the pack price to `3000`.
 
 The observed premium-pack samples below were captured under earlier
-`BaseEconomyBalance` tuning passes before `0.8.0`. Version `0.8.0` sets pack
+`BaseEconomyBalance` tuning passes before `0.8.1`. Version `0.8.1` sets pack
 rarity rates, trait rates, rarity values, trait values, and base values for a
 more fun pack-opening experience, so these samples are useful for understanding
 pack behavior but should be retested before treating the ROI numbers as current.
@@ -575,7 +578,7 @@ observed 19250.00 pull is large enough to determine the whole sample. Treat Gen
 
 ## Balance Interpretation
 
-With the current `0.8.0` value curve and pack odds, standard packs made mostly from commons
+With the current `0.8.1` value curve and pack odds, standard packs made mostly from commons
 and uncommons are expected to be close to purchase-cost break-even or modestly
 profitable. They should still usually be below the sealed pack's tier-specific
 market value.
@@ -584,7 +587,7 @@ This intentionally shifts the mod away from strict anti-flip balance and toward
 fun pack opening. The player should usually feel like opening packs was worth
 doing, while sealed packs still retain a meaningful market-value advantage.
 
-All pack types need fresh samples under `0.8.0`. The old screenshots showed that
+All pack types need fresh samples under `0.8.1`. The old screenshots showed that
 luxury and rare luxury packs use hidden premium/foil multipliers, but the exact
 current ROI changed when base values, rarity values, trait values, pack rarity
 rates, and trait rates were smoothed.

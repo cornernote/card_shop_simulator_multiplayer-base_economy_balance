@@ -20,15 +20,15 @@ the current `BaseEconomyBalance` value curve.
 
 ## Known Pack Costs
 
-| Generation | Standard | Luxury | Rare Luxury |
-| --- | ---: | ---: | ---: |
-| Gen 1 | 3 | 150 | 1500 |
-| Gen 2 | 6 | 300 | 3000 |
-| Gen 3 | 9 | 450 | 4500 |
-| Gen 4 | 12 | 600 | 6000 |
-| Gen 5 | 15 | 750 | 7500 |
-| Gen 6 | 18 | 900 | 9000 |
-| Gen 7 | 21 | 1050 | 10500 |
+| Generation | Standard Cost | Standard Market | Luxury Cost | Luxury Market | Rare Luxury Cost | Rare Luxury Market |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Gen 1 | 3 | 6 | 150 | 225 | 1500 | 1800 |
+| Gen 2 | 6 | 12 | 300 | 450 | 3000 | 3600 |
+| Gen 3 | 9 | 18 | 450 | 675 | 4500 | 5400 |
+| Gen 4 | 12 | 24 | 600 | 900 | 6000 | 7200 |
+| Gen 5 | 15 | 30 | 750 | 1125 | 7500 | 9000 |
+| Gen 6 | 18 | 36 | 900 | 1350 | 9000 | 10800 |
+| Gen 7 | 21 | 42 | 1050 | 1575 | 10500 | 12600 |
 
 Known market value multipliers:
 
@@ -38,6 +38,24 @@ Known market value multipliers:
 | Gen 2 Spell | 2.0x | User observed spell pack markup matches standard |
 | Luxury | 1.5x | Gen 1 luxury 150 -> 225; Gen 7 luxury 1050 -> 1575 |
 | Rare Luxury | 1.2x | Gen 1 rare luxury 1500 -> 1800; Gen 2 rare luxury 3000 -> 3600; Gen 7 rare luxury 10500 -> 12600 |
+
+Verified in-game so far:
+
+- Gen 1 standard: `3 -> 6`
+- Gen 1 luxury: `150 -> 225`
+- Gen 1 rare luxury: `1500 -> 1800`
+- Gen 2 standard: `6 -> 12`
+- Gen 2 luxury: `300 -> 450`
+- Gen 2 rare luxury: `3000 -> 3600`
+- Gen 7 luxury: `1050 -> 1575`
+- Gen 7 rare luxury: `10500 -> 12600`
+
+Pattern-filled pending checks:
+
+- Gen 3-6 luxury market values are assumed at `1.5x`.
+- Gen 3-6 rare luxury market values are assumed at `1.2x`.
+- Gen 2 spell pack cost is not recorded yet, but its market markup is observed
+  as `2.0x`.
 
 ## Break-Even Per Card
 

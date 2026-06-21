@@ -14,7 +14,7 @@ INVENTORY = MODS / "GenMTG" / "docs" / "current-card-inventory.tsv"
 
 PACK_COSTS = {
     0: {"standard": 3, "luxury": 150, "rare_luxury": 1500},
-    1: {"standard": 6, "luxury": 300, "rare_luxury": 1000},
+    1: {"standard": 6, "luxury": 300, "rare_luxury": 3000},
     2: {"standard": 9, "luxury": 450, "rare_luxury": 4500},
     3: {"standard": 12, "luxury": 600, "rare_luxury": 6000},
     4: {"standard": 15, "luxury": 750, "rare_luxury": 7500},

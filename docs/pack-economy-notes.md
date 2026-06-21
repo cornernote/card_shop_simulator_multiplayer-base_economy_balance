@@ -23,7 +23,7 @@ the current `BaseEconomyBalance` value curve.
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
 | Gen 1 | 3 | 150 | 1500 |
-| Gen 2 | 6 | 300 | 1000 |
+| Gen 2 | 6 | 300 | 3000 |
 | Gen 3 | 9 | 450 | 4500 |
 | Gen 4 | 12 | 600 | 6000 |
 | Gen 5 | 15 | 750 | 7500 |
@@ -37,7 +37,7 @@ Known market value multipliers:
 | Standard | 2.0x | Gen 1 standard cost 3, market 6 |
 | Gen 2 Spell | 2.0x | User observed spell pack markup matches standard |
 | Luxury | 1.5x | Gen 1 luxury 150 -> 225; Gen 7 luxury 1050 -> 1575 |
-| Rare Luxury | 1.2x | Gen 1 rare luxury 1500 -> 1800; Gen 7 rare luxury 10500 -> 12600 |
+| Rare Luxury | 1.2x | Gen 1 rare luxury 1500 -> 1800; Gen 2 rare luxury 3000 -> 3600; Gen 7 rare luxury 10500 -> 12600 |
 
 ## Break-Even Per Card
 
@@ -46,7 +46,7 @@ Because each pack opens 6 cards, break-even per card is pack cost divided by 6.
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
 | Gen 1 | 0.50 | 25.00 | 250.00 |
-| Gen 2 | 1.00 | 50.00 | 166.67 |
+| Gen 2 | 1.00 | 50.00 | 500.00 |
 | Gen 3 | 1.50 | 75.00 | 750.00 |
 | Gen 4 | 2.00 | 100.00 | 1000.00 |
 | Gen 5 | 2.50 | 125.00 | 1250.00 |
@@ -155,7 +155,7 @@ Against purchase cost:
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
 | Gen 1 | -5.8% | +32.4% | +24.2% |
-| Gen 2 | +1.7% | -9.7% | +6.8% |
+| Gen 2 | +1.7% | -9.7% | -64.4% |
 | Gen 3 | +17.9% | +3.3% | -58.8% |
 | Gen 4 | +30.2% | +11.1% | -55.3% |
 | Gen 5 | +41.9% | +17.0% | -53.4% |
@@ -167,7 +167,7 @@ Against sealed market value:
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
 | Gen 1 | -52.9% | -11.7% | +3.5% |
-| Gen 2 | -49.2% | -39.8% | -11.0% |
+| Gen 2 | -49.2% | -39.8% | -70.3% |
 | Gen 3 | -41.0% | -31.1% | -65.7% |
 | Gen 4 | -34.9% | -25.9% | -62.8% |
 | Gen 5 | -29.0% | -22.0% | -61.2% |
@@ -458,6 +458,9 @@ These samples were recorded after the `0.8.0` balance pass.
 | Gen 1 Standard | 16 | 3 | 2.38 | 79.3% | 0.90 | 2/16 | Most packs were 0.81-1.38, with two hits at 10.66 and 13.87. |
 | Gen 1 Luxury | 16 | 150 | 178.18 | 118.8% | 144.34 | 7/16 | Close to target; one jackpot at 693.36 and a few bad misses. |
 | Gen 1 Rare Luxury | 16 | 1500 | 905.74 | 60.4% | 812.26 | 1/16 | Much lower than predicted; rare luxury likely needs a targeted bump. |
+| Gen 2 Standard | 16 | 6 | 2.20 | 36.7% | 2.02 | 0/16 | Too low; most packs were near 2.00. |
+| Gen 2 Luxury | 16 | 300 | 294.26 | 98.1% | 188.00 | 5/16 | Close to target; average near cost and below 450 market. |
+| Gen 2 Rare Luxury | 16 | 3000 | 1858.43 | 61.9% | 1395.87 | 4/16 | Corrected cost makes this a chase/loss pack, not overpowered. |
 
 Interpretation:
 
@@ -466,6 +469,9 @@ Interpretation:
   jackpot rate is not constant.
 - Gen 1 Rare Luxury is too low in practice. The theoretical model predicted
   `1862.42`, but the observed average was `905.74`.
+- Gen 2 Standard is too low in observed play.
+- Gen 2 Luxury feels close.
+- Gen 2 Rare Luxury is below cost after correcting the pack price to `3000`.
 
 The observed premium-pack samples below were captured under earlier
 `BaseEconomyBalance` tuning passes before `0.8.0`. Version `0.8.0` sets pack

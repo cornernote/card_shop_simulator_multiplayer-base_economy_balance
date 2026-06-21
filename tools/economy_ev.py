@@ -24,7 +24,6 @@ PACK_COSTS = {
 
 PACK_MARKET_MULTIPLIERS = {
     "standard": 2.0,
-    "spell": 2.0,
     "luxury": 1.5,
     "rare_luxury": 1.2,
 }

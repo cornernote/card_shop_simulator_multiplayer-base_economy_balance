@@ -7,10 +7,12 @@ the current `BaseEconomyBalance` value curve.
 
 - Each pack opens 6 cards.
 - Pack product prices were read manually from the in-game shop/tablet.
-- Pack market value depends on pack tier. Standard packs and the Gen 2 spell
-  pack use 2x purchase cost, luxury uses 1.5x, and rare luxury uses 1.2x.
-  Use market value as the baseline for pack-value ROI, and purchase cost as the
-  baseline for player cash profit/loss.
+- Pack market value depends on pack tier. Standard packs use 2x purchase cost,
+  luxury uses 1.5x, and rare luxury uses 1.2x. Use market value as the baseline
+  for pack-value ROI, and purchase cost as the baseline for player cash
+  profit/loss.
+- Gen 2 spell packs have no shop cost. Treat them as game-use items, not card
+  sale packs, until proven otherwise.
 - Observed standard packs mostly produce common and uncommon cards.
 - The safe Lua registry surface exposes setters for drop tables and value
   multipliers, but not getters. Runtime probes cannot dump vanilla rates
@@ -35,7 +37,6 @@ Known market value multipliers:
 | Pack Tier | Market Multiplier | Verified Examples |
 | --- | ---: | --- |
 | Standard | 2.0x | Gen 1 standard cost 3, market 6 |
-| Gen 2 Spell | 2.0x | User observed spell pack markup matches standard |
 | Luxury | 1.5x | Gen 1 luxury 150 -> 225; Gen 7 luxury 1050 -> 1575 |
 | Rare Luxury | 1.2x | Gen 1 rare luxury 1500 -> 1800; Gen 2 rare luxury 3000 -> 3600; Gen 7 rare luxury 10500 -> 12600 |
 
@@ -54,8 +55,7 @@ Pattern-filled pending checks:
 
 - Gen 3-6 luxury market values are assumed at `1.5x`.
 - Gen 3-6 rare luxury market values are assumed at `1.2x`.
-- Gen 2 spell pack cost is not recorded yet, but its market markup is observed
-  as `2.0x`.
+- Gen 2 spell packs have no shop cost and are excluded from card-sale EV.
 
 ## Break-Even Per Card
 

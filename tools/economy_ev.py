@@ -61,6 +61,13 @@ PACK_RATES = {
     "rare_luxury": {0: 0.0, 1: 0.02, 2: 0.35, 3: 0.53, 4: 0.10},
 }
 
+SPECIAL_POOLS = {
+    "God/divine": lambda card: card["card_id"] >= 100000,
+    "Holiday/Halloween": lambda card: 1314 <= card["card_id"] <= 1323,
+    "Souvenir/commemorative": lambda card: 9000 <= card["card_id"] < 10000,
+    "Other 13xx special": lambda card: 1301 <= card["card_id"] <= 1313 or 1324 <= card["card_id"] <= 1331,
+}
+
 
 def clamp(value: float, low: float, high: float) -> float:
     return max(low, min(high, value))
@@ -82,6 +89,13 @@ def generation_index(card_id: int) -> int:
     if 1000 <= card_id < 8000:
         return int(clamp((card_id // 1000) - 1, 0, 6))
     return 0
+
+
+def market_generation_multiplier(card_id: int, gen: int) -> int:
+    """Return the price multiplier for normal gens; special pack buckets are 1x."""
+    if 1000 <= card_id < 8000 and 0 <= gen <= 6:
+        return gen + 1
+    return 1
 
 
 def balanced_value(card_id: int, rarity: int, current: float) -> float:
@@ -130,7 +144,7 @@ def load_cards() -> list[dict[str, float | int | str]]:
             current = float(row["CardValueMulti"])
             base = balanced_value(card_id, rarity, current)
             trait_ev = weighted_average(TRAIT_RATES[rarity], TRAIT_VALUES)
-            final_ev = base * RARITY_VALUES[rarity] * trait_ev * (gen + 1)
+            final_ev = base * RARITY_VALUES[rarity] * trait_ev * market_generation_multiplier(card_id, gen)
             cards.append({
                 "card_id": card_id,
                 "gen": gen,
@@ -174,6 +188,18 @@ def main() -> None:
             market_roi = ((ev / (cost * 2)) - 1) * 100
             label = pack_name.replace("_", " ").title()
             print(f"| Gen {gen + 1} | {label} | {ev:.2f} | {cash_roi:+.1f}% | {market_roi:+.1f}% |")
+
+    print()
+    print("Special pool estimates assume 6 cards drawn evenly from the pool.")
+    print()
+    print("| Pool | Cards | EV | Per Card |")
+    print("| --- | ---: | ---: | ---: |")
+    for name, includes in SPECIAL_POOLS.items():
+        pool_cards = [card for card in cards if includes(card)]
+        if not pool_cards:
+            continue
+        per_card = sum(float(card["final_ev"]) for card in pool_cards) / len(pool_cards)
+        print(f"| {name} | {len(pool_cards)} | {per_card * 6:.2f} | {per_card:.2f} |")
 
 
 if __name__ == "__main__":

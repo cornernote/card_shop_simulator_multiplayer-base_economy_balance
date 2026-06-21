@@ -156,6 +156,17 @@ global drop table, because Gen 3-7 rare luxury pack costs rise much faster than
 the global generation multiplier. Version `0.8.0` keeps rare luxury as a chase
 pack instead of raising all high-rarity cards enough to break shelf-sale balance.
 
+Special pool EV estimates below assume a 6-card pack drawn evenly from that
+special pool. They are not confirmed pack EV because the safe registry surface
+does not expose special-pack draw tables or prices.
+
+| Special Pool | Cards | 6-Card EV | Per Card EV |
+| --- | ---: | ---: | ---: |
+| God/divine | 4 | 14016.24 | 2336.04 |
+| Holiday/Halloween | 10 | 383.37 | 63.89 |
+| Souvenir/commemorative | 22 | 324.04 | 54.01 |
+| Other 13xx special | 21 | 63.83 | 10.64 |
+
 ## Public Modding Guide Findings
 
 Sources saved for later:
@@ -177,8 +188,28 @@ CardValueMulti * rarity value multiplier * trait value multiplier * generation v
 ```
 
 The guide says generations 1-7 correspond to `1x` through `7x` in that formula.
-In Lua card data, the `Gen` field itself is zero-based, so the generation value
-multiplier should be treated as `Gen + 1` for EV estimates.
+In Lua card data, the `Gen` field itself is zero-based for normal generation
+cards, so the generation value multiplier should be treated as `Gen + 1` only
+for normal card IDs in the `1000-7999` range.
+
+Special pack buckets use `Gen` values that do not mean price generations:
+
+| Gen Field | Meaning |
+| ---: | --- |
+| 0-6 | Normal generations 1-7 |
+| 9 | Souvenir/commemorative special pool |
+| 10 | Holiday/Halloween special pool |
+
+The Baijiaoling check confirms this. In-game market value for foil Baijiaoling
+under `0.8.0` is `945`, which matches:
+
+```text
+14 CardValueMulti * 7.5 SuperRare value * 9 Legendary/Foil value = 945
+```
+
+If `Gen = 10` were a price multiplier, that same card would be `10395`, which is
+not what the game shows. EV tooling should therefore use `1x` for special pack
+buckets unless a future sample proves a different rule.
 
 ### Documented Vanilla Booster Weights
 
@@ -394,6 +425,24 @@ The safe mod surface does not currently expose the pack drop table, card frame
 weights, stat rolls, or final price formula.
 
 ## Observed Pack Samples
+
+### Current `0.8.0` Samples
+
+These samples were recorded after the `0.8.0` balance pass.
+
+| Pack | Count | Cost | Average | EV Percent | Median | Profit Packs | Notes |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Gen 1 Standard | 16 | 3 | 2.38 | 79.3% | 0.90 | 2/16 | Most packs were 0.81-1.38, with two hits at 10.66 and 13.87. |
+| Gen 1 Luxury | 16 | 150 | 178.18 | 118.8% | 144.34 | 7/16 | Close to target; one jackpot at 693.36 and a few bad misses. |
+| Gen 1 Rare Luxury | 16 | 1500 | 905.74 | 60.4% | 812.26 | 1/16 | Much lower than predicted; rare luxury likely needs a targeted bump. |
+
+Interpretation:
+
+- Gen 1 Standard is a little too harsh in observed play, but not wildly off.
+- Gen 1 Luxury feels close: average is profitable, median is near cost, and the
+  jackpot rate is not constant.
+- Gen 1 Rare Luxury is too low in practice. The theoretical model predicted
+  `1862.42`, but the observed average was `905.74`.
 
 The observed premium-pack samples below were captured under earlier
 `BaseEconomyBalance` tuning passes before `0.8.0`. Version `0.8.0` sets pack

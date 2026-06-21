@@ -50,8 +50,8 @@ Reference upload docs:
     "previewfile"      "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Card Shop Simulator Multiplayer\\CardShopSim\\Mods\\BaseEconomyBalance\\workshop.jpg"
     "visibility"       "0"
     "title"            "Base Economy Balance"
-    "description"      "Retunes base card values so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement."
-    "changenote"       "version 0.4.0"
+    "description"      "Retunes base card values and premium trait multipliers so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement."
+    "changenote"       "version 0.5.0"
 }
 ```
 
@@ -98,4 +98,3 @@ _uploader\logs\stderr.txt
 _uploader\logs\workshop_log.txt
 _uploader\workshopbuilds\depot_build_3569500.log
 ```
-

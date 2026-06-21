@@ -1,9 +1,9 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.4.0",
+    version     = "0.5.0",
     author      = "Codex",
-    description = "Smooths base-game card value multipliers while preserving card names, art, stats, and rarity.",
+    description = "Smooths base-game card value and premium trait multipliers while preserving card names, art, stats, and rarity.",
 }
 
 local function log(message)
@@ -113,6 +113,37 @@ local function collect_ids(registry)
     return ids
 end
 
+local function apply_trait_values(registry)
+    if not registry.RegisterTraitValueData or not UE or not UE.ETrait then
+        return 0
+    end
+
+    -- These values smooth premium frame variance. The sample mod in
+    -- _sample/3639546917 uses 1, 2, 5, 10, 20, 35; this gentler curve keeps
+    -- premium cards exciting without letting the top frame dominate pack EV.
+    local trait_values = {
+        { UE.ETrait.Basic, 1.00 },
+        { UE.ETrait.Silver, 1.50 },
+        { UE.ETrait.Gold, 3.00 },
+        { UE.ETrait.Holographic, 6.00 },
+        { UE.ETrait.Shiny, 10.00 },
+        { UE.ETrait.Legendary, 18.00 },
+    }
+
+    local changed = 0
+    for _, item in ipairs(trait_values) do
+        local ok = safe(function()
+            registry:RegisterTraitValueData(item[1], item[2])
+            return true
+        end, false)
+        if ok then
+            changed = changed + 1
+        end
+    end
+
+    return changed
+end
+
 local function balanced_value(card_id, rarity, current)
     if not current or current <= 0 then return nil end
 
@@ -166,6 +197,7 @@ local function apply_balance()
 
     local changed = 0
     local skipped = 0
+    local traits_changed = apply_trait_values(registry)
     local ids = collect_ids(registry)
 
     for _, card_id in ipairs(ids) do
@@ -186,7 +218,7 @@ local function apply_balance()
         end
     end
 
-    log(("balanced %d cards, skipped %d"):format(changed, skipped))
+    log(("balanced %d cards, skipped %d, traits %d"):format(changed, skipped, traits_changed))
 end
 
 function M.OnInit()

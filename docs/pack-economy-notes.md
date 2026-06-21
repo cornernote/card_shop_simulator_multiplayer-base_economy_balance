@@ -131,6 +131,40 @@ meaningful hits.
 | Gen 6 | 2.38 | 4.00 | 9.05 | 15.77 |
 | Gen 7 | 2.67 | 4.52 | 10.39 | 18.45 |
 
+## Current Trait Values
+
+Version `0.5.0` also registers a gentler global trait value table with
+`RegisterTraitValueData`. This was learned from `_sample/3639546917`, which
+uses the same safe registry function.
+
+The sample mod uses this steeper trait curve:
+
+| Trait | Sample Value |
+| --- | ---: |
+| Basic | 1 |
+| Silver | 2 |
+| Gold | 5 |
+| Holographic | 10 |
+| Shiny | 20 |
+| Legendary | 35 |
+
+`BaseEconomyBalance` now uses:
+
+| Trait | Balanced Value |
+| --- | ---: |
+| Basic | 1.00 |
+| Silver | 1.50 |
+| Gold | 3.00 |
+| Holographic | 6.00 |
+| Shiny | 10.00 |
+| Legendary | 18.00 |
+
+This should make luxury and rare luxury packs less dominated by the top premium
+frames while keeping premium pulls exciting. The mod intentionally does not call
+`RegisterRarityValueData`, because rarity is already handled by the per-card
+`CardValueMulti` curve. Stacking a global rarity table on top would be harder to
+reason about and could overcorrect the economy.
+
 ## Opened-Card Value Mechanics
 
 The registry value we can edit is `CardValueMulti`. It is not the whole final
@@ -166,10 +200,10 @@ weights, stat rolls, or final price formula.
 ## Observed Pack Samples
 
 The observed premium-pack samples below were captured under earlier
-`BaseEconomyBalance` tuning passes before `0.4.0`. Version `0.4.0` raises base
-values for a more fun pack-opening experience, so these samples are useful for
-understanding pack behavior but should be retested before treating the ROI
-numbers as current.
+`BaseEconomyBalance` tuning passes before `0.5.0`. Version `0.5.0` raises base
+values and smooths trait multipliers for a more fun pack-opening experience, so
+these samples are useful for understanding pack behavior but should be retested
+before treating the ROI numbers as current.
 
 ### Gen 1 Luxury
 
@@ -249,7 +283,7 @@ observed 19250.00 pull is large enough to determine the whole sample. Treat Gen
 
 ## Balance Interpretation
 
-With the current `0.4.0` value curve, standard packs made mostly from commons
+With the current `0.5.0` value curve, standard packs made mostly from commons
 and uncommons are expected to be close to purchase-cost break-even or modestly
 profitable. They should still usually be below the sealed pack's 2x market
 value.
@@ -258,6 +292,7 @@ This intentionally shifts the mod away from strict anti-flip balance and toward
 fun pack opening. The player should usually feel like opening packs was worth
 doing, while sealed packs still retain a meaningful market-value advantage.
 
-Premium packs need fresh screenshots under `0.4.0`. The old `0.3.0` screenshots
-showed that luxury and rare luxury packs use hidden premium/foil multipliers,
-but the exact current ROI changed when base values were raised.
+Premium packs need fresh screenshots under `0.5.0`. The old screenshots showed
+that luxury and rare luxury packs use hidden premium/foil multipliers, but the
+exact current ROI changed when base values were raised and trait multipliers
+were smoothed.

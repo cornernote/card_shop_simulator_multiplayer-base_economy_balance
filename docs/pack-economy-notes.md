@@ -96,7 +96,7 @@ Current working target for premium packs:
 
 ## Current Balanced Value Estimate
 
-The current model is no longer a simple card-value estimate. Version `0.7.0`
+The current model is no longer a simple card-value estimate. Version `0.7.1`
 sets:
 
 - per-card `CardValueMulti`
@@ -119,7 +119,7 @@ It mirrors the mod constants from `main.lua` and reads
 `GenMTG/docs/current-card-inventory.tsv`. Treat its output as a tuning guide,
 then confirm with in-game pack samples.
 
-The immediate test target for `0.7.0` is:
+The immediate test target for `0.7.1` is:
 
 | Pack Type | Desired Feel |
 | --- | --- |
@@ -224,7 +224,7 @@ meaningful hits.
 
 ## Current Drop Rates, Rarity Values, And Trait Values
 
-Version `0.7.0` registers pack rarity rates, trait rates, global rarity values,
+Version `0.7.1` registers pack rarity rates, trait rates, global rarity values,
 and global trait values. This was learned from two sample mods:
 
 - `_sample/3639546917` uses `RegisterRarityValueData` and
@@ -255,11 +255,12 @@ for our notes is:
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Standard | 0.720 | 0.230 | 0.045 | 0.005 | 0.000 |
 | Luxury | 0.150 | 0.350 | 0.400 | 0.095 | 0.005 |
-| Rare Luxury | 0.000 | 0.100 | 0.550 | 0.320 | 0.030 |
+| Rare Luxury | 0.000 | 0.050 | 0.500 | 0.400 | 0.050 |
 
 Standard packs remain mostly common/uncommon, with occasional rare hits. Luxury
 and rare luxury packs are shifted away from pure low-rarity misses while keeping
-rare luxury high variance.
+rare luxury high variance. Version `0.7.1` raises rare luxury EV by moving a
+small amount of weight from uncommon/rare into super rare/god.
 
 ### Rarity Values
 
@@ -364,7 +365,7 @@ weights, stat rolls, or final price formula.
 ## Observed Pack Samples
 
 The observed premium-pack samples below were captured under earlier
-`BaseEconomyBalance` tuning passes before `0.7.0`. Version `0.7.0` sets pack
+`BaseEconomyBalance` tuning passes before `0.7.1`. Version `0.7.1` sets pack
 rarity rates, trait rates, rarity values, trait values, and base values for a
 more fun pack-opening experience, so these samples are useful for understanding
 pack behavior but should be retested before treating the ROI numbers as current.
@@ -447,7 +448,7 @@ observed 19250.00 pull is large enough to determine the whole sample. Treat Gen
 
 ## Balance Interpretation
 
-With the current `0.7.0` value curve and pack odds, standard packs made mostly from commons
+With the current `0.7.1` value curve and pack odds, standard packs made mostly from commons
 and uncommons are expected to be close to purchase-cost break-even or modestly
 profitable. They should still usually be below the sealed pack's 2x market
 value.
@@ -456,7 +457,7 @@ This intentionally shifts the mod away from strict anti-flip balance and toward
 fun pack opening. The player should usually feel like opening packs was worth
 doing, while sealed packs still retain a meaningful market-value advantage.
 
-All pack types need fresh samples under `0.7.0`. The old screenshots showed that
+All pack types need fresh samples under `0.7.1`. The old screenshots showed that
 luxury and rare luxury packs use hidden premium/foil multipliers, but the exact
 current ROI changed when base values, rarity values, trait values, pack rarity
 rates, and trait rates were smoothed.

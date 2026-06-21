@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.7.0",
+    version     = "0.7.1",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -205,10 +205,10 @@ local function apply_pack_rarity_rates(registry)
             2,
             {
                 [UE.ECardRarity.Common] = 0.0,
-                [UE.ECardRarity.UnCommon] = 0.10,
-                [UE.ECardRarity.Rare] = 0.55,
-                [UE.ECardRarity.SuperRare] = 0.32,
-                [UE.ECardRarity.God] = 0.03,
+                [UE.ECardRarity.UnCommon] = 0.05,
+                [UE.ECardRarity.Rare] = 0.50,
+                [UE.ECardRarity.SuperRare] = 0.40,
+                [UE.ECardRarity.God] = 0.05,
             },
         },
     }

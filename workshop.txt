@@ -7,7 +7,7 @@
 [list]
 [*][b]Fun pack-opening balance[/b] - standard packs should feel worth opening instead of feeling like constant misses.
 [*][b]Smoother card values[/b] - commons, uncommons, rares, and super rares scale more cleanly across gens 1-7.
-[*][b]Smoother pack odds[/b] - premium packs are less pure miss-or-jackpot chaos.
+[*][b]Smoother pack odds[/b] - premium packs are less pure miss-or-jackpot chaos, with rare luxury nudged toward better chase pulls.
 [*][b]Smoother rarity multipliers[/b] - common-heavy standard packs are not constant misses.
 [*][b]Gentler premium traits[/b] - luxury and rare luxury packs are less dominated by giant jackpot frames.
 [*][b]Chase cards preserved[/b] - rare, super rare, god, holiday, and souvenir cards still matter.

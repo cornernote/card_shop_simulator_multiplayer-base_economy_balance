@@ -7,5 +7,5 @@
 	"visibility"		"0"
 	"title"		"Base Economy Balance"
 	"description"		"Retunes base card values, pack rarity odds, rarity multipliers, and premium traits so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement."
-	"changenote"		"version 0.7.0"
+	"changenote"		"version 0.7.1: rare luxury EV lift"
 }

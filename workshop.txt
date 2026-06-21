@@ -1,12 +1,14 @@
 [h1]Base Economy Balance[/h1]
 
-[b]Base Economy Balance[/b] retunes card values and premium trait multipliers so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement.
+[b]Base Economy Balance[/b] retunes card values, pack rarity odds, rarity multipliers, and premium traits so opening packs feels better without replacing card art, card names, rarity, stats, elements, or pack placement.
 
 [h2]=== FEATURES ===[/h2]
 
 [list]
 [*][b]Fun pack-opening balance[/b] - standard packs should feel worth opening instead of feeling like constant misses.
 [*][b]Smoother card values[/b] - commons, uncommons, rares, and super rares scale more cleanly across gens 1-7.
+[*][b]Smoother pack odds[/b] - premium packs are less pure miss-or-jackpot chaos.
+[*][b]Smoother rarity multipliers[/b] - common-heavy standard packs are not constant misses.
 [*][b]Gentler premium traits[/b] - luxury and rare luxury packs are less dominated by giant jackpot frames.
 [*][b]Chase cards preserved[/b] - rare, super rare, god, holiday, and souvenir cards still matter.
 [*][b]Visual-mod friendly[/b] - works with card art/name replacement mods because it preserves card identity and art.
@@ -21,13 +23,13 @@ The goal is not strict anti-profit balance. The goal is that opening packs is fu
 [*]Standard packs can make a bit extra versus purchase cost.
 [*]Opened cards should usually still be below sealed pack market value.
 [*]Rare and super-rare pulls should feel good.
-[*]Luxury and rare luxury packs stay higher variance, but premium trait multipliers are gentler.
+[*]Luxury and rare luxury packs stay higher variance, but rarity and trait rates are smoothed.
 [/list]
 
 [h2]=== COMPATIBILITY ===[/h2]
 
-This mod preserves card identity and changes [b]CardValueMulti[/b] plus the global trait value table. It should work with vanilla cards and visual replacement mods such as GenMTG.
+This mod preserves card identity and changes [b]CardValueMulti[/b] plus pack rarity odds and global rarity/trait tables. It should work with vanilla cards and visual replacement mods such as GenMTG.
 
 [h2]=== NOTES ===[/h2]
 
-The game does not currently expose pack drop tables, final card instance pricing, frame weights, or premium variant odds through the safe Lua registry surface. This mod balances the editable base card values and global trait value table only.
+The game does not currently expose getters for vanilla pack drop tables, final card instance pricing, frame weights, or premium variant odds through the safe Lua registry surface. This mod sets balanced pack rarity rates, trait rates, rarity values, trait values, and editable base card values.

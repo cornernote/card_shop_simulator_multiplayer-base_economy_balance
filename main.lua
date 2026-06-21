@@ -1,9 +1,9 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.5.0",
+    version     = "0.7.0",
     author      = "Codex",
-    description = "Smooths base-game card value and premium trait multipliers while preserving card names, art, stats, and rarity.",
+    description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
 
 local function log(message)
@@ -144,6 +144,166 @@ local function apply_trait_values(registry)
     return changed
 end
 
+local function apply_rarity_values(registry)
+    if not registry.RegisterRarityValueData or not UE or not UE.ECardRarity then
+        return 0
+    end
+
+    -- Final card prices also use a global rarity table. Commons appear to be
+    -- heavily discounted by default, which made standard packs miss too hard.
+    local rarity_values = {
+        { UE.ECardRarity.Common, 0.80 },
+        { UE.ECardRarity.UnCommon, 1.00 },
+        { UE.ECardRarity.Rare, 2.00 },
+        { UE.ECardRarity.SuperRare, 8.00 },
+        { UE.ECardRarity.God, 35.00 },
+    }
+
+    local changed = 0
+    for _, item in ipairs(rarity_values) do
+        local ok = safe(function()
+            registry:RegisterRarityValueData(item[1], item[2])
+            return true
+        end, false)
+        if ok then
+            changed = changed + 1
+        end
+    end
+
+    return changed
+end
+
+local function apply_pack_rarity_rates(registry)
+    if not registry.RegisterRarityData or not UE or not UE.ECardRarity then
+        return 0
+    end
+
+    -- Booster indexes are sample-proven in _sample/3681574688:
+    -- 0 = standard, 1 = deluxe/luxury, 2 = luxury/rare luxury.
+    local pack_rates = {
+        {
+            0,
+            {
+                [UE.ECardRarity.Common] = 0.72,
+                [UE.ECardRarity.UnCommon] = 0.23,
+                [UE.ECardRarity.Rare] = 0.045,
+                [UE.ECardRarity.SuperRare] = 0.005,
+                [UE.ECardRarity.God] = 0.0,
+            },
+        },
+        {
+            1,
+            {
+                [UE.ECardRarity.Common] = 0.15,
+                [UE.ECardRarity.UnCommon] = 0.35,
+                [UE.ECardRarity.Rare] = 0.40,
+                [UE.ECardRarity.SuperRare] = 0.095,
+                [UE.ECardRarity.God] = 0.005,
+            },
+        },
+        {
+            2,
+            {
+                [UE.ECardRarity.Common] = 0.0,
+                [UE.ECardRarity.UnCommon] = 0.10,
+                [UE.ECardRarity.Rare] = 0.55,
+                [UE.ECardRarity.SuperRare] = 0.32,
+                [UE.ECardRarity.God] = 0.03,
+            },
+        },
+    }
+
+    local changed = 0
+    for _, item in ipairs(pack_rates) do
+        local ok = safe(function()
+            registry:RegisterRarityData(item[1], item[2])
+            return true
+        end, false)
+        if ok then
+            changed = changed + 1
+        end
+    end
+
+    return changed
+end
+
+local function apply_trait_rates(registry)
+    if not registry.RegisterTraitData or not UE or not UE.ECardRarity or not UE.ETrait then
+        return 0
+    end
+
+    local trait_rates = {
+        {
+            UE.ECardRarity.Common,
+            {
+                [UE.ETrait.Basic] = 0.76,
+                [UE.ETrait.Silver] = 0.18,
+                [UE.ETrait.Gold] = 0.05,
+                [UE.ETrait.Holographic] = 0.01,
+                [UE.ETrait.Shiny] = 0.0,
+                [UE.ETrait.Legendary] = 0.0,
+            },
+        },
+        {
+            UE.ECardRarity.UnCommon,
+            {
+                [UE.ETrait.Basic] = 0.60,
+                [UE.ETrait.Silver] = 0.25,
+                [UE.ETrait.Gold] = 0.10,
+                [UE.ETrait.Holographic] = 0.04,
+                [UE.ETrait.Shiny] = 0.01,
+                [UE.ETrait.Legendary] = 0.0,
+            },
+        },
+        {
+            UE.ECardRarity.Rare,
+            {
+                [UE.ETrait.Basic] = 0.35,
+                [UE.ETrait.Silver] = 0.30,
+                [UE.ETrait.Gold] = 0.20,
+                [UE.ETrait.Holographic] = 0.10,
+                [UE.ETrait.Shiny] = 0.04,
+                [UE.ETrait.Legendary] = 0.01,
+            },
+        },
+        {
+            UE.ECardRarity.SuperRare,
+            {
+                [UE.ETrait.Basic] = 0.20,
+                [UE.ETrait.Silver] = 0.25,
+                [UE.ETrait.Gold] = 0.25,
+                [UE.ETrait.Holographic] = 0.18,
+                [UE.ETrait.Shiny] = 0.09,
+                [UE.ETrait.Legendary] = 0.03,
+            },
+        },
+        {
+            UE.ECardRarity.God,
+            {
+                [UE.ETrait.Basic] = 0.10,
+                [UE.ETrait.Silver] = 0.15,
+                [UE.ETrait.Gold] = 0.25,
+                [UE.ETrait.Holographic] = 0.25,
+                [UE.ETrait.Shiny] = 0.15,
+                [UE.ETrait.Legendary] = 0.10,
+            },
+        },
+    }
+
+    local changed = 0
+    for _, item in ipairs(trait_rates) do
+        local ok = safe(function()
+            registry:RegisterTraitData(item[1], item[2])
+            return true
+        end, false)
+        if ok then
+            changed = changed + 1
+        end
+    end
+
+    return changed
+end
+
 local function balanced_value(card_id, rarity, current)
     if not current or current <= 0 then return nil end
 
@@ -197,7 +357,10 @@ local function apply_balance()
 
     local changed = 0
     local skipped = 0
+    local rarities_changed = apply_rarity_values(registry)
     local traits_changed = apply_trait_values(registry)
+    local pack_rates_changed = apply_pack_rarity_rates(registry)
+    local trait_rates_changed = apply_trait_rates(registry)
     local ids = collect_ids(registry)
 
     for _, card_id in ipairs(ids) do
@@ -218,7 +381,7 @@ local function apply_balance()
         end
     end
 
-    log(("balanced %d cards, skipped %d, traits %d"):format(changed, skipped, traits_changed))
+    log(("balanced %d cards, skipped %d, rarity values %d, trait values %d, pack rates %d, trait rates %d"):format(changed, skipped, rarities_changed, traits_changed, pack_rates_changed, trait_rates_changed))
 end
 
 function M.OnInit()

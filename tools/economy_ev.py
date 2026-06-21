@@ -62,9 +62,9 @@ TRAIT_RATES = {
 }
 
 PACK_RATES = {
-    "standard": {0: 0.95, 1: 0.04, 2: 0.009, 3: 0.001, 4: 0.0},
-    "luxury": {0: 0.08, 1: 0.32, 2: 0.47, 3: 0.115, 4: 0.005},
-    "rare_luxury": {0: 0.0, 1: 0.02, 2: 0.35, 3: 0.53, 4: 0.10},
+    "standard": {0: 0.9583, 1: 0.0372, 2: 0.0045, 3: 0.0, 4: 0.0},
+    "luxury": {0: 0.10, 1: 0.34, 2: 0.50, 3: 0.06, 4: 0.0},
+    "rare_luxury": {0: 0.0, 1: 0.01, 2: 0.12, 3: 0.87, 4: 0.0},
 }
 
 SPECIAL_POOLS = {
@@ -107,9 +107,9 @@ def market_generation_multiplier(card_id: int, gen: int) -> int:
 def balanced_value(card_id: int, rarity: int, current: float) -> float:
     if 1314 <= card_id <= 1323:
         if rarity == 3:
-            return 14.00
+            return 900.00
         t = clamp((card_id - 1314) / 7, 0, 1)
-        return round2(8.00 + (4.00 * t))
+        return round2(420.00 + (250.00 * t))
 
     if 9000 <= card_id < 10000:
         if current >= 6:
@@ -117,22 +117,22 @@ def balanced_value(card_id: int, rarity: int, current: float) -> float:
         return 3.00
 
     if rarity == 4 or card_id >= 100000:
-        return 24.00
+        return 46.00
 
     gen = generation_index(card_id)
 
     if rarity == 0:
         if gen <= 2:
-            return round2(scale_clamped(current, 0.85, 1.40, 0.85 + (0.18 * gen), 1.25 + (0.22 * gen)))
-        return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.08 * gen), 0.85 + (0.12 * gen)))
+            return round2(scale_clamped(current, 0.85, 1.40, 2.40 + (0.50 * gen), 3.50 + (0.62 * gen)))
+        return round2(scale_clamped(current, 0.85, 1.40, 1.30 + (0.22 * gen), 2.45 + (0.34 * gen)))
     if rarity == 1:
         if gen <= 2:
-            return round2(scale_clamped(current, 0.84, 1.60, 1.30 + (0.28 * gen), 2.00 + (0.35 * gen)))
-        return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.14 * gen), 1.55 + (0.18 * gen)))
+            return round2(scale_clamped(current, 0.84, 1.60, 3.25 + (0.70 * gen), 5.00 + (0.88 * gen)))
+        return round2(scale_clamped(current, 0.84, 1.60, 2.25 + (0.35 * gen), 3.88 + (0.45 * gen)))
     if rarity == 2:
-        return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.28 * gen), 5.75 + (0.35 * gen)))
+        return round2(scale_clamped(current, 0.94, 2.30, 5.85 + (0.50 * gen), 10.35 + (0.63 * gen)))
     if rarity == 3:
-        return round2(scale_clamped(current, 1.00, 1.90, 8.50 + (0.40 * gen), 14.00 + (0.55 * gen)))
+        return round2(scale_clamped(current, 1.00, 1.90, 30.00, 49.00))
 
     return round2(current)
 

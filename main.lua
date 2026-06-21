@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.8.1",
+    version     = "0.8.4",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -27,9 +27,9 @@ local CONFIG = {
     pack_rates = {
         -- Booster indexes are sample-proven in _sample/3681574688:
         -- 0 = standard, 1 = deluxe/luxury, 2 = luxury/rare luxury.
-        [0] = { Common = 0.95, UnCommon = 0.04, Rare = 0.009, SuperRare = 0.001, God = 0.0 },
-        [1] = { Common = 0.08, UnCommon = 0.32, Rare = 0.47, SuperRare = 0.115, God = 0.005 },
-        [2] = { Common = 0.0, UnCommon = 0.02, Rare = 0.35, SuperRare = 0.53, God = 0.10 },
+        [0] = { Common = 0.9583, UnCommon = 0.0372, Rare = 0.0045, SuperRare = 0.0, God = 0.0 },
+        [1] = { Common = 0.10, UnCommon = 0.34, Rare = 0.50, SuperRare = 0.06, God = 0.0 },
+        [2] = { Common = 0.0, UnCommon = 0.01, Rare = 0.12, SuperRare = 0.87, God = 0.0 },
     },
 
     trait_rates = {
@@ -41,27 +41,27 @@ local CONFIG = {
     },
 
     card_values = {
-        holiday_rare = { min = 8.00, step = 4.00 },
-        holiday_super = 14.00,
+        holiday_rare = { min = 420.00, step = 250.00 },
+        holiday_super = 900.00,
         souvenir_low = 3.00,
         souvenir_high = 6.00,
-        god = 24.00,
+        god = 46.00,
         curves = {
             Common = {
                 low_gen_max = 2,
-                low = { in_low = 0.85, in_high = 1.40, out_low = 0.85, out_low_gen = 0.18, out_high = 1.25, out_high_gen = 0.22 },
-                base = { in_low = 0.85, in_high = 1.40, out_low = 0.45, out_low_gen = 0.08, out_high = 0.85, out_high_gen = 0.12 },
+                low = { in_low = 0.85, in_high = 1.40, out_low = 2.40, out_low_gen = 0.50, out_high = 3.50, out_high_gen = 0.62 },
+                base = { in_low = 0.85, in_high = 1.40, out_low = 1.30, out_low_gen = 0.22, out_high = 2.45, out_high_gen = 0.34 },
             },
             UnCommon = {
                 low_gen_max = 2,
-                low = { in_low = 0.84, in_high = 1.60, out_low = 1.30, out_low_gen = 0.28, out_high = 2.00, out_high_gen = 0.35 },
-                base = { in_low = 0.84, in_high = 1.60, out_low = 0.90, out_low_gen = 0.14, out_high = 1.55, out_high_gen = 0.18 },
+                low = { in_low = 0.84, in_high = 1.60, out_low = 3.25, out_low_gen = 0.70, out_high = 5.00, out_high_gen = 0.88 },
+                base = { in_low = 0.84, in_high = 1.60, out_low = 2.25, out_low_gen = 0.35, out_high = 3.88, out_high_gen = 0.45 },
             },
             Rare = {
-                base = { in_low = 0.94, in_high = 2.30, out_low = 3.25, out_low_gen = 0.28, out_high = 5.75, out_high_gen = 0.35 },
+                base = { in_low = 0.94, in_high = 2.30, out_low = 5.85, out_low_gen = 0.50, out_high = 10.35, out_high_gen = 0.63 },
             },
             SuperRare = {
-                base = { in_low = 1.00, in_high = 1.90, out_low = 8.50, out_low_gen = 0.40, out_high = 14.00, out_high_gen = 0.55 },
+                base = { in_low = 1.00, in_high = 1.90, out_low = 30.00, out_low_gen = 0.00, out_high = 49.00, out_high_gen = 0.00 },
             },
         },
     },
@@ -316,8 +316,8 @@ local function balanced_value(card_id, rarity, current)
     if not current or current <= 0 then return nil end
     local values = CONFIG.card_values
 
-    -- Holiday cards were extreme outliers at roughly 48-65. Keep them premium,
-    -- but below divine/god cards and low enough not to dominate the economy.
+    -- Holiday cards come from premium event drops rather than buyable packs.
+    -- Keep them above Gen 7 rare-luxury EV, but below divine/god cards.
     if card_id >= 1314 and card_id <= 1323 then
         if rarity == 3 then return values.holiday_super end
         local t = clamp((card_id - 1314) / 7, 0, 1)

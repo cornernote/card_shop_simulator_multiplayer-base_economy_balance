@@ -6,6 +6,67 @@ local M = {
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
 
+local CONFIG = {
+    trait_values = {
+        Basic = 1.00,
+        Silver = 1.35,
+        Gold = 2.20,
+        Holographic = 3.60,
+        Shiny = 5.50,
+        Legendary = 9.00,
+    },
+
+    rarity_values = {
+        Common = 0.30,
+        UnCommon = 0.45,
+        Rare = 1.70,
+        SuperRare = 7.50,
+        God = 35.00,
+    },
+
+    pack_rates = {
+        -- Booster indexes are sample-proven in _sample/3681574688:
+        -- 0 = standard, 1 = deluxe/luxury, 2 = luxury/rare luxury.
+        [0] = { Common = 0.95, UnCommon = 0.04, Rare = 0.009, SuperRare = 0.001, God = 0.0 },
+        [1] = { Common = 0.08, UnCommon = 0.32, Rare = 0.47, SuperRare = 0.115, God = 0.005 },
+        [2] = { Common = 0.0, UnCommon = 0.02, Rare = 0.35, SuperRare = 0.53, God = 0.10 },
+    },
+
+    trait_rates = {
+        Common = { Basic = 0.82, Silver = 0.14, Gold = 0.035, Holographic = 0.005, Shiny = 0.0, Legendary = 0.0 },
+        UnCommon = { Basic = 0.68, Silver = 0.22, Gold = 0.08, Holographic = 0.018, Shiny = 0.002, Legendary = 0.0 },
+        Rare = { Basic = 0.45, Silver = 0.30, Gold = 0.17, Holographic = 0.06, Shiny = 0.018, Legendary = 0.002 },
+        SuperRare = { Basic = 0.30, Silver = 0.28, Gold = 0.22, Holographic = 0.14, Shiny = 0.05, Legendary = 0.01 },
+        God = { Basic = 0.16, Silver = 0.20, Gold = 0.27, Holographic = 0.22, Shiny = 0.11, Legendary = 0.04 },
+    },
+
+    card_values = {
+        holiday_rare = { min = 8.00, step = 4.00 },
+        holiday_super = 14.00,
+        souvenir_low = 3.00,
+        souvenir_high = 6.00,
+        god = 24.00,
+        curves = {
+            Common = {
+                low_gen_max = 2,
+                low = { in_low = 0.85, in_high = 1.40, out_low = 0.85, out_low_gen = 0.18, out_high = 1.25, out_high_gen = 0.22 },
+                base = { in_low = 0.85, in_high = 1.40, out_low = 0.45, out_low_gen = 0.08, out_high = 0.85, out_high_gen = 0.12 },
+            },
+            UnCommon = {
+                low_gen_max = 2,
+                low = { in_low = 0.84, in_high = 1.60, out_low = 1.30, out_low_gen = 0.28, out_high = 2.00, out_high_gen = 0.35 },
+                base = { in_low = 0.84, in_high = 1.60, out_low = 0.90, out_low_gen = 0.14, out_high = 1.55, out_high_gen = 0.18 },
+            },
+            Rare = {
+                base = { in_low = 0.94, in_high = 2.30, out_low = 3.25, out_low_gen = 0.28, out_high = 5.75, out_high_gen = 0.35 },
+            },
+            SuperRare = {
+                base = { in_low = 1.00, in_high = 1.90, out_low = 8.50, out_low_gen = 0.40, out_high = 14.00, out_high_gen = 0.55 },
+            },
+        },
+    },
+}
+
 local function log(message)
     if MOD and MOD.Logger then
         MOD.Logger.LogScreen("[BaseEconomyBalance] " .. tostring(message), 6, 1, 1, 0, 1)
@@ -65,6 +126,57 @@ local function rarity_index(rarity)
     return nil
 end
 
+local function rarity_name(rarity)
+    if rarity == 0 then return "Common" end
+    if rarity == 1 then return "UnCommon" end
+    if rarity == 2 then return "Rare" end
+    if rarity == 3 then return "SuperRare" end
+    if rarity == 4 then return "God" end
+    return nil
+end
+
+local function rarity_enum(name)
+    if not UE or not UE.ECardRarity then return nil end
+    return UE.ECardRarity[name]
+end
+
+local function trait_enum(name)
+    if not UE or not UE.ETrait then return nil end
+    return UE.ETrait[name]
+end
+
+local function build_rarity_rate_table(rates)
+    local out = {}
+    for name, value in pairs(rates) do
+        local enum = rarity_enum(name)
+        if enum ~= nil then
+            out[enum] = value
+        end
+    end
+    return out
+end
+
+local function build_trait_rate_table(rates)
+    local out = {}
+    for name, value in pairs(rates) do
+        local enum = trait_enum(name)
+        if enum ~= nil then
+            out[enum] = value
+        end
+    end
+    return out
+end
+
+local function apply_curve(current, gen, curve)
+    return round2(scale_clamped(
+        current,
+        curve.in_low,
+        curve.in_high,
+        curve.out_low + (curve.out_low_gen * gen),
+        curve.out_high + (curve.out_high_gen * gen)
+    ))
+end
+
 local function get_card(registry, card_id)
     local data = safe(function() return UE.FCardDataAll() end, nil)
     if not data then return nil end
@@ -118,25 +230,17 @@ local function apply_trait_values(registry)
         return 0
     end
 
-    -- These values smooth premium frame variance. Vanilla uses much larger
-    -- multipliers for shiny/legendary frames, which made pack EV spike too hard.
-    local trait_values = {
-        { UE.ETrait.Basic, 1.00 },
-        { UE.ETrait.Silver, 1.35 },
-        { UE.ETrait.Gold, 2.20 },
-        { UE.ETrait.Holographic, 3.60 },
-        { UE.ETrait.Shiny, 5.50 },
-        { UE.ETrait.Legendary, 9.00 },
-    }
-
     local changed = 0
-    for _, item in ipairs(trait_values) do
-        local ok = safe(function()
-            registry:RegisterTraitValueData(item[1], item[2])
-            return true
-        end, false)
-        if ok then
-            changed = changed + 1
+    for name, value in pairs(CONFIG.trait_values) do
+        local enum = trait_enum(name)
+        if enum ~= nil then
+            local ok = safe(function()
+                registry:RegisterTraitValueData(enum, value)
+                return true
+            end, false)
+            if ok then
+                changed = changed + 1
+            end
         end
     end
 
@@ -148,24 +252,17 @@ local function apply_rarity_values(registry)
         return 0
     end
 
-    -- Final card prices also use a global rarity table. These values keep
-    -- common-heavy standard packs alive without letting low-cost packs print money.
-    local rarity_values = {
-        { UE.ECardRarity.Common, 0.30 },
-        { UE.ECardRarity.UnCommon, 0.45 },
-        { UE.ECardRarity.Rare, 1.70 },
-        { UE.ECardRarity.SuperRare, 7.50 },
-        { UE.ECardRarity.God, 35.00 },
-    }
-
     local changed = 0
-    for _, item in ipairs(rarity_values) do
-        local ok = safe(function()
-            registry:RegisterRarityValueData(item[1], item[2])
-            return true
-        end, false)
-        if ok then
-            changed = changed + 1
+    for name, value in pairs(CONFIG.rarity_values) do
+        local enum = rarity_enum(name)
+        if enum ~= nil then
+            local ok = safe(function()
+                registry:RegisterRarityValueData(enum, value)
+                return true
+            end, false)
+            if ok then
+                changed = changed + 1
+            end
         end
     end
 
@@ -177,45 +274,11 @@ local function apply_pack_rarity_rates(registry)
         return 0
     end
 
-    -- Booster indexes are sample-proven in _sample/3681574688:
-    -- 0 = standard, 1 = deluxe/luxury, 2 = luxury/rare luxury.
-    local pack_rates = {
-        {
-            0,
-            {
-                [UE.ECardRarity.Common] = 0.95,
-                [UE.ECardRarity.UnCommon] = 0.04,
-                [UE.ECardRarity.Rare] = 0.009,
-                [UE.ECardRarity.SuperRare] = 0.001,
-                [UE.ECardRarity.God] = 0.0,
-            },
-        },
-        {
-            1,
-            {
-                [UE.ECardRarity.Common] = 0.08,
-                [UE.ECardRarity.UnCommon] = 0.32,
-                [UE.ECardRarity.Rare] = 0.47,
-                [UE.ECardRarity.SuperRare] = 0.115,
-                [UE.ECardRarity.God] = 0.005,
-            },
-        },
-        {
-            2,
-            {
-                [UE.ECardRarity.Common] = 0.0,
-                [UE.ECardRarity.UnCommon] = 0.02,
-                [UE.ECardRarity.Rare] = 0.35,
-                [UE.ECardRarity.SuperRare] = 0.53,
-                [UE.ECardRarity.God] = 0.10,
-            },
-        },
-    }
-
     local changed = 0
-    for _, item in ipairs(pack_rates) do
+    for booster_index, rates in pairs(CONFIG.pack_rates) do
+        local rate_table = build_rarity_rate_table(rates)
         local ok = safe(function()
-            registry:RegisterRarityData(item[1], item[2])
+            registry:RegisterRarityData(booster_index, rate_table)
             return true
         end, false)
         if ok then
@@ -231,72 +294,18 @@ local function apply_trait_rates(registry)
         return 0
     end
 
-    local trait_rates = {
-        {
-            UE.ECardRarity.Common,
-            {
-                [UE.ETrait.Basic] = 0.82,
-                [UE.ETrait.Silver] = 0.14,
-                [UE.ETrait.Gold] = 0.035,
-                [UE.ETrait.Holographic] = 0.005,
-                [UE.ETrait.Shiny] = 0.0,
-                [UE.ETrait.Legendary] = 0.0,
-            },
-        },
-        {
-            UE.ECardRarity.UnCommon,
-            {
-                [UE.ETrait.Basic] = 0.68,
-                [UE.ETrait.Silver] = 0.22,
-                [UE.ETrait.Gold] = 0.08,
-                [UE.ETrait.Holographic] = 0.018,
-                [UE.ETrait.Shiny] = 0.002,
-                [UE.ETrait.Legendary] = 0.0,
-            },
-        },
-        {
-            UE.ECardRarity.Rare,
-            {
-                [UE.ETrait.Basic] = 0.45,
-                [UE.ETrait.Silver] = 0.30,
-                [UE.ETrait.Gold] = 0.17,
-                [UE.ETrait.Holographic] = 0.06,
-                [UE.ETrait.Shiny] = 0.018,
-                [UE.ETrait.Legendary] = 0.002,
-            },
-        },
-        {
-            UE.ECardRarity.SuperRare,
-            {
-                [UE.ETrait.Basic] = 0.30,
-                [UE.ETrait.Silver] = 0.28,
-                [UE.ETrait.Gold] = 0.22,
-                [UE.ETrait.Holographic] = 0.14,
-                [UE.ETrait.Shiny] = 0.05,
-                [UE.ETrait.Legendary] = 0.01,
-            },
-        },
-        {
-            UE.ECardRarity.God,
-            {
-                [UE.ETrait.Basic] = 0.16,
-                [UE.ETrait.Silver] = 0.20,
-                [UE.ETrait.Gold] = 0.27,
-                [UE.ETrait.Holographic] = 0.22,
-                [UE.ETrait.Shiny] = 0.11,
-                [UE.ETrait.Legendary] = 0.04,
-            },
-        },
-    }
-
     local changed = 0
-    for _, item in ipairs(trait_rates) do
-        local ok = safe(function()
-            registry:RegisterTraitData(item[1], item[2])
-            return true
-        end, false)
-        if ok then
-            changed = changed + 1
+    for rarity, rates in pairs(CONFIG.trait_rates) do
+        local enum = rarity_enum(rarity)
+        if enum ~= nil then
+            local rate_table = build_trait_rate_table(rates)
+            local ok = safe(function()
+                registry:RegisterTraitData(enum, rate_table)
+                return true
+            end, false)
+            if ok then
+                changed = changed + 1
+            end
         end
     end
 
@@ -305,49 +314,39 @@ end
 
 local function balanced_value(card_id, rarity, current)
     if not current or current <= 0 then return nil end
+    local values = CONFIG.card_values
 
     -- Holiday cards were extreme outliers at roughly 48-65. Keep them premium,
     -- but below divine/god cards and low enough not to dominate the economy.
     if card_id >= 1314 and card_id <= 1323 then
-        if rarity == 3 then return 14.00 end
+        if rarity == 3 then return values.holiday_super end
         local t = clamp((card_id - 1314) / 7, 0, 1)
-        return round2(8.00 + (4.00 * t))
+        return round2(values.holiday_rare.min + (values.holiday_rare.step * t))
     end
 
     -- Souvenir/commemorative cards are special, but most were worth only 1.0.
     if card_id >= 9000 and card_id < 10000 then
-        if current >= 6 then return 6.00 end
-        return 3.00
+        if current >= 6 then return values.souvenir_high end
+        return values.souvenir_low
     end
 
     -- Divine/god cards should remain clear chase pulls without making hidden
     -- premium multipliers completely dominate the economy.
     if rarity == 4 or card_id >= 100000 then
-        return 24.00
+        return values.god
     end
 
     local gen = generation_index(card_id)
+    local name = rarity_name(rarity)
+    local config = name and values.curves[name] or nil
 
-    if rarity == 0 then
-        if gen <= 2 then
-            return round2(scale_clamped(current, 0.85, 1.40, 0.85 + (0.18 * gen), 1.25 + (0.22 * gen)))
+    if config then
+        if config.low and config.low_gen_max and gen <= config.low_gen_max then
+            return apply_curve(current, gen, config.low)
         end
-        return round2(scale_clamped(current, 0.85, 1.40, 0.45 + (0.08 * gen), 0.85 + (0.12 * gen)))
-    end
-
-    if rarity == 1 then
-        if gen <= 2 then
-            return round2(scale_clamped(current, 0.84, 1.60, 1.30 + (0.28 * gen), 2.00 + (0.35 * gen)))
+        if config.base then
+            return apply_curve(current, gen, config.base)
         end
-        return round2(scale_clamped(current, 0.84, 1.60, 0.90 + (0.14 * gen), 1.55 + (0.18 * gen)))
-    end
-
-    if rarity == 2 then
-        return round2(scale_clamped(current, 0.94, 2.30, 3.25 + (0.28 * gen), 5.75 + (0.35 * gen)))
-    end
-
-    if rarity == 3 then
-        return round2(scale_clamped(current, 1.00, 1.90, 8.50 + (0.40 * gen), 14.00 + (0.55 * gen)))
     end
 
     return round2(current)

@@ -22,6 +22,13 @@ PACK_COSTS = {
     6: {"standard": 21, "luxury": 1050, "rare_luxury": 10500},
 }
 
+PACK_MARKET_MULTIPLIERS = {
+    "standard": 2.0,
+    "spell": 2.0,
+    "luxury": 1.5,
+    "rare_luxury": 1.2,
+}
+
 RARITY_NAMES = {
     0: "common",
     1: "uncommon",
@@ -184,8 +191,9 @@ def main() -> None:
             per_card = weighted_average(available_weights, rarity_avg)
             ev = per_card * 6
             cost = PACK_COSTS[gen][pack_name]
+            market_value = cost * PACK_MARKET_MULTIPLIERS[pack_name]
             cash_roi = ((ev / cost) - 1) * 100
-            market_roi = ((ev / (cost * 2)) - 1) * 100
+            market_roi = ((ev / market_value) - 1) * 100
             label = pack_name.replace("_", " ").title()
             print(f"| Gen {gen + 1} | {label} | {ev:.2f} | {cash_roi:+.1f}% | {market_roi:+.1f}% |")
 

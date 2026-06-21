@@ -7,9 +7,10 @@ the current `BaseEconomyBalance` value curve.
 
 - Each pack opens 6 cards.
 - Pack product prices were read manually from the in-game shop/tablet.
-- Pack market value is expected to be 2x the purchase cost. Use market value as
-  the baseline for pack-value ROI, and purchase cost as the baseline for player
-  cash profit/loss.
+- Pack market value depends on pack tier. Standard packs and the Gen 2 spell
+  pack use 2x purchase cost, luxury uses 1.5x, and rare luxury uses 1.2x.
+  Use market value as the baseline for pack-value ROI, and purchase cost as the
+  baseline for player cash profit/loss.
 - Observed standard packs mostly produce common and uncommon cards.
 - The safe Lua registry surface exposes setters for drop tables and value
   multipliers, but not getters. Runtime probes cannot dump vanilla rates
@@ -28,6 +29,15 @@ the current `BaseEconomyBalance` value curve.
 | Gen 5 | 15 | 750 | 7500 |
 | Gen 6 | 18 | 900 | 9000 |
 | Gen 7 | 21 | 1050 | 10500 |
+
+Known market value multipliers:
+
+| Pack Tier | Market Multiplier | Verified Examples |
+| --- | ---: | --- |
+| Standard | 2.0x | Gen 1 standard cost 3, market 6 |
+| Gen 2 Spell | 2.0x | User observed spell pack markup matches standard |
+| Luxury | 1.5x | Gen 1 luxury 150 -> 225; Gen 7 luxury 1050 -> 1575 |
+| Rare Luxury | 1.2x | Gen 1 rare luxury 1500 -> 1800; Gen 7 rare luxury 10500 -> 12600 |
 
 ## Break-Even Per Card
 
@@ -51,8 +61,7 @@ reliable money printer.
 
 There are two useful ROI lenses:
 
-- Pack-value ROI: total opened card value compared with pack market value. Pack
-  market value is 2x purchase cost.
+- Pack-value ROI: total opened card value compared with pack market value.
 - Cash ROI: total opened card value compared with the actual purchase cost.
 
 Use pack-value ROI for tuning the intended pack economy. Use cash ROI to detect
@@ -63,7 +72,7 @@ For standard packs:
 - Most common/uncommon packs should feel okay to open.
 - Opening a pack and selling the cards can make a bit extra versus purchase
   cost.
-- Opened value should usually remain below the sealed pack's 2x market value.
+- Opened value should usually remain below the sealed pack's market value.
 - A rare or super-rare hit can push a pack into profit.
 
 Working standard-pack ROI targets:
@@ -78,8 +87,10 @@ Working standard-pack ROI targets:
 | Gen 6 | 0% to +30% | -50% to -35% |
 | Gen 7 | 0% to +30% | -50% to -35% |
 
-These targets assume the player experience should reward opening packs without
-making opened cards consistently beat the sealed pack market value.
+These standard-pack targets assume the player experience should reward opening
+packs without making opened cards consistently beat the sealed pack market
+value. Premium tiers use lower market multipliers, so their pack-value ROI needs
+to be read against the tier-specific market multiplier.
 
 For luxury and rare luxury packs, the ROI target is not yet set because their
 value depends on pack-specific rarity, foil, or variant rules that are not
@@ -150,6 +161,18 @@ Against purchase cost:
 | Gen 5 | +41.9% | +17.0% | -53.4% |
 | Gen 6 | +42.7% | +15.8% | -55.0% |
 | Gen 7 | +55.3% | +31.3% | -48.6% |
+
+Against sealed market value:
+
+| Generation | Standard | Luxury | Rare Luxury |
+| --- | ---: | ---: | ---: |
+| Gen 1 | -52.9% | -11.7% | +3.5% |
+| Gen 2 | -49.2% | -39.8% | -11.0% |
+| Gen 3 | -41.0% | -31.1% | -65.7% |
+| Gen 4 | -34.9% | -25.9% | -62.8% |
+| Gen 5 | -29.0% | -22.0% | -61.2% |
+| Gen 6 | -28.6% | -22.8% | -62.5% |
+| Gen 7 | -22.3% | -12.5% | -57.2% |
 
 Rare luxury cannot be made close to break-even for every generation with one
 global drop table, because Gen 3-7 rare luxury pack costs rise much faster than
@@ -452,18 +475,18 @@ pack behavior but should be retested before treating the ROI numbers as current.
 
 ### Gen 1 Luxury
 
-Observed from 4 screenshots. Pack cost is 150, market value is 300, and each
+Observed from 4 screenshots. Pack cost is 150, market value is 225, and each
 pack contains 6 cards.
 These samples show hidden premium variants/foils can appear, but the pack is
 still strongly negative EV at the current values.
 
 | Sample | Total Card Value | Cash ROI | Pack-Value ROI |
 | --- | ---: | ---: | ---: |
-| 1 | 35.88 | -76.08% | -88.04% |
-| 2 | 33.77 | -77.49% | -88.74% |
-| 3 | 31.00 | -79.33% | -89.67% |
-| 4 | 50.40 | -66.40% | -83.20% |
-| Average | 37.76 | -74.83% | -87.41% |
+| 1 | 35.88 | -76.08% | -84.05% |
+| 2 | 33.77 | -77.49% | -84.99% |
+| 3 | 31.00 | -79.33% | -86.22% |
+| 4 | 50.40 | -66.40% | -77.60% |
+| Average | 37.76 | -74.83% | -83.22% |
 
 Observed high-value pulls included premium/foil cards around 12.60, 14.20,
 25.50, 30.00, and 31.50. Even with those hits, Gen 1 luxury did not approach
@@ -471,18 +494,18 @@ break-even in this small sample.
 
 ### Gen 7 Luxury
 
-Observed from 4 screenshots. Pack cost is 1050, market value is 2100, and each
+Observed from 4 screenshots. Pack cost is 1050, market value is 1575, and each
 pack contains 6 cards.
 These samples show Gen 7 luxury also has high-variance premium hits. It can
 produce jackpot cards, but most observed packs still lost money.
 
 | Sample | Total Card Value | Cash ROI | Pack-Value ROI |
 | --- | ---: | ---: | ---: |
-| 1 | 250.95 | -76.10% | -88.05% |
-| 2 | 1978.97 | +88.47% | -5.76% |
-| 3 | 298.21 | -71.60% | -85.80% |
-| 4 | 896.08 | -14.66% | -57.33% |
-| Average | 856.05 | -18.47% | -59.24% |
+| 1 | 250.95 | -76.10% | -84.07% |
+| 2 | 1978.97 | +88.47% | +25.65% |
+| 3 | 298.21 | -71.60% | -81.07% |
+| 4 | 896.08 | -14.66% | -43.11% |
+| Average | 856.05 | -18.47% | -45.65% |
 
 The average is below break-even in this tiny sample, but one 1960.00 pull
 nearly doubled the pack by itself. This looks closer to a moderate lottery pack
@@ -490,18 +513,18 @@ than Gen 1 luxury did.
 
 ### Gen 1 Rare Luxury
 
-Observed from 4 screenshots. Pack cost is 1500, market value is 3000, and each
+Observed from 4 screenshots. Pack cost is 1500, market value is 1800, and each
 pack contains 6 cards.
 These samples show rare luxury behaves more like a high-variance chase pack:
 some packs miss badly, while jackpot packs can beat the pack cost.
 
 | Sample | Total Card Value | Cash ROI | Pack-Value ROI |
 | --- | ---: | ---: | ---: |
-| 1 | 3030.50 | +102.03% | +1.02% |
-| 2 | 169.94 | -88.67% | -94.34% |
-| 3 | 3163.60 | +110.91% | +5.45% |
-| 4 | 569.80 | -62.01% | -81.01% |
-| Average | 1733.46 | +15.56% | -42.22% |
+| 1 | 3030.50 | +102.03% | +68.36% |
+| 2 | 169.94 | -88.67% | -90.56% |
+| 3 | 3163.60 | +110.91% | +75.76% |
+| 4 | 569.80 | -62.01% | -68.34% |
+| Average | 1733.46 | +15.56% | -3.70% |
 
 The average is positive in this tiny sample, but it is driven by two jackpot
 pulls worth 2750 each. Without those jackpot hits, the pack loses heavily. Treat
@@ -509,18 +532,18 @@ Gen 1 rare luxury as a lottery pack until there is a larger sample.
 
 ### Gen 7 Rare Luxury
 
-Observed from 4 screenshots. Pack cost is 10500, market value is 21000, and each
+Observed from 4 screenshots. Pack cost is 10500, market value is 12600, and each
 pack contains 6 cards.
 This tier is extremely high variance. Three samples were below cost, and one
 large jackpot result made the average nearly break-even.
 
 | Sample | Total Card Value | Cash ROI | Pack-Value ROI |
 | --- | ---: | ---: | ---: |
-| 1 | 8741.60 | -16.75% | -58.37% |
-| 2 | 8705.20 | -17.09% | -58.55% |
-| 3 | 616.70 | -94.13% | -97.06% |
-| 4 | 22855.56 | +117.67% | +8.84% |
-| Average | 10229.77 | -2.57% | -51.29% |
+| 1 | 8741.60 | -16.75% | -30.62% |
+| 2 | 8705.20 | -17.09% | -30.91% |
+| 3 | 616.70 | -94.13% | -95.11% |
+| 4 | 22855.56 | +117.67% | +81.39% |
+| Average | 10229.77 | -2.57% | -18.81% |
 
 The average is close to break-even, but this is not a steady-value pack. The
 observed 19250.00 pull is large enough to determine the whole sample. Treat Gen
@@ -530,8 +553,8 @@ observed 19250.00 pull is large enough to determine the whole sample. Treat Gen
 
 With the current `0.8.0` value curve and pack odds, standard packs made mostly from commons
 and uncommons are expected to be close to purchase-cost break-even or modestly
-profitable. They should still usually be below the sealed pack's 2x market
-value.
+profitable. They should still usually be below the sealed pack's tier-specific
+market value.
 
 This intentionally shifts the mod away from strict anti-flip balance and toward
 fun pack opening. The player should usually feel like opening packs was worth

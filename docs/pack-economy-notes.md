@@ -148,62 +148,64 @@ It mirrors the mod constants from `main.lua` and reads
 `GenMTG/docs/current-card-inventory.tsv`. Treat its output as a tuning guide,
 then confirm with in-game pack samples.
 
-The immediate test target for `0.8.4` is:
+The immediate test target for `0.8.5` is:
 
 | Pack Type | Desired Feel |
 | --- | --- |
-| Standard | Cheap and common-heavy, but opened cards slightly beat sealed pack sale after normal selling friction |
-| Luxury | Opened cards beat sealed pack sale enough to offset limited shelf slots and occasional cat sales |
-| Rare Luxury | Premium chase tier, clearly better opened than sold sealed without replacing event/god packs |
+| Standard | Cheap and common-heavy, near sealed-pack value but not a reliable money printer |
+| Luxury | Close to sealed-pack value, sometimes above, with fewer bad-feeling misses |
+| Rare Luxury | Premium chase tier, clearly worth opening but less explosive than `0.8.4` |
 
-The target is based on player liquidity, not pure market value. A sealed pack is
-easy to sell, while opened cards compete for limited card-sale slots and overflow
-cards may go to the cat at roughly `70-80%` of market value. Raw opened-card EV
-therefore needs to sit above sealed-pack market value so the effective player
-result still feels slightly better than selling the sealed pack.
+The target is based on player liquidity and total economy pressure, not pure
+market value. A sealed pack is easy to sell, while opened cards compete for
+limited card-sale slots and overflow cards may go to the cat at roughly
+`70-80%` of market value. However, free map cards and achievement rewards also
+feed the card economy, so normal packs should not all sit far above sealed-pack
+market value. Version `0.8.5` keeps pack opening attractive while trimming the
+`0.8.4` money-printer feel.
 
 The current theoretical EV estimate is:
 
 | Generation | Standard EV | Luxury EV | Rare Luxury EV |
 | --- | ---: | ---: | ---: |
-| Gen 1 | 6.74 | 237.67 | 2550.41 |
-| Gen 2 | 15.49 | 486.26 | 5074.13 |
-| Gen 3 | 27.55 | 810.20 | 8465.59 |
-| Gen 4 | 26.33 | 1117.90 | 11826.89 |
-| Gen 5 | 36.55 | 1434.94 | 14816.23 |
-| Gen 6 | 44.23 | 1667.25 | 16399.10 |
-| Gen 7 | 54.64 | 2157.09 | 21275.05 |
+| Gen 1 | 5.08 | 189.87 | 2040.32 |
+| Gen 2 | 11.70 | 388.39 | 4059.36 |
+| Gen 3 | 20.83 | 647.00 | 6772.43 |
+| Gen 4 | 20.01 | 893.08 | 9460.14 |
+| Gen 5 | 27.79 | 1146.34 | 11852.91 |
+| Gen 6 | 33.73 | 1331.67 | 13119.71 |
+| Gen 7 | 41.71 | 1722.59 | 17018.90 |
 
 Against purchase cost:
 
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
-| Gen 1 | +124.6% | +58.4% | +70.0% |
-| Gen 2 | +158.2% | +62.1% | +69.1% |
-| Gen 3 | +206.1% | +80.0% | +88.1% |
-| Gen 4 | +119.4% | +86.3% | +97.1% |
-| Gen 5 | +143.7% | +91.3% | +97.5% |
-| Gen 6 | +145.7% | +85.2% | +82.2% |
-| Gen 7 | +160.2% | +105.4% | +102.6% |
+| Gen 1 | +69.5% | +26.6% | +36.0% |
+| Gen 2 | +95.0% | +29.5% | +35.3% |
+| Gen 3 | +131.4% | +43.8% | +50.5% |
+| Gen 4 | +66.7% | +48.8% | +57.7% |
+| Gen 5 | +85.3% | +52.8% | +58.0% |
+| Gen 6 | +87.4% | +48.0% | +45.8% |
+| Gen 7 | +98.6% | +64.1% | +62.1% |
 
 Against sealed market value:
 
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
-| Gen 1 | +12.3% | +5.6% | +41.7% |
-| Gen 2 | +29.1% | +8.1% | +40.9% |
-| Gen 3 | +53.0% | +20.0% | +56.8% |
-| Gen 4 | +9.7% | +24.2% | +64.3% |
-| Gen 5 | +21.8% | +27.5% | +64.6% |
-| Gen 6 | +22.9% | +23.5% | +51.8% |
-| Gen 7 | +30.1% | +37.0% | +68.8% |
+| Gen 1 | -15.3% | -15.6% | +13.4% |
+| Gen 2 | -2.5% | -13.7% | +12.8% |
+| Gen 3 | +15.7% | -4.1% | +25.4% |
+| Gen 4 | -16.6% | -0.8% | +31.4% |
+| Gen 5 | -7.4% | +1.9% | +31.7% |
+| Gen 6 | -6.3% | -1.4% | +21.5% |
+| Gen 7 | -0.7% | +9.4% | +35.1% |
 
-Version `0.8.4` keeps the full-run observed rates as a baseline, then raises
-normal card base values so opened cards beat sealed-pack market value before
-selling friction. This compensates for limited sale slots and cat-discounted
-overflow while keeping pack tiers distinct.
+Version `0.8.5` keeps the full-run observed rates as a baseline, then trims
+normal card base values after `0.8.4` felt close but too profitable in practice.
+Standard and luxury packs now sit around sealed-pack market value, while rare
+luxury remains the clear open-over-sell tier.
 
-Version `0.8.4` keeps Holiday/Halloween cards in a premium event-drop tier.
+Version `0.8.5` keeps Holiday/Halloween cards in a premium event-drop tier.
 These packs cannot be bought directly, so their EV should sit above Gen 7 rare
 luxury while remaining slightly below divine/god packs.
 
@@ -213,10 +215,10 @@ does not expose special-pack draw tables or prices.
 
 | Special Pool | Cards | 6-Card EV | Per Card EV |
 | --- | ---: | ---: | ---: |
-| God/divine | 4 | 26864.46 | 4477.41 |
-| Holiday/Halloween | 10 | 23397.63 | 3899.60 |
+| God/divine | 4 | 24178.01 | 4029.67 |
+| Holiday/Halloween | 10 | 21057.86 | 3509.64 |
 | Souvenir/commemorative | 22 | 324.04 | 54.01 |
-| Other 13xx special | 21 | 114.92 | 19.15 |
+| Other 13xx special | 21 | 91.92 | 15.32 |
 
 ## Public Modding Guide Findings
 
@@ -258,11 +260,11 @@ under `0.8.1` tuning was `945`, which matched:
 14 CardValueMulti * 7.5 SuperRare value * 9 Legendary/Foil value = 945
 ```
 
-Under `0.8.4`, Halloween SuperRare cards use `900` CardValueMulti, so the same
+Under `0.8.5`, Halloween SuperRare cards use `810` CardValueMulti, so the same
 foil check becomes:
 
 ```text
-900 CardValueMulti * 7.5 SuperRare value * 9 Legendary/Foil value = 60750
+810 CardValueMulti * 7.5 SuperRare value * 9 Legendary/Foil value = 54675
 ```
 
 If `Gen = 10` were a price multiplier, these values would be 11x higher, which
@@ -377,12 +379,11 @@ for our notes is:
 
 Standard packs remain mostly common/uncommon, with occasional rare hits. Luxury
 and rare luxury packs are shifted away from pure low-rarity misses while keeping
-rare luxury high variance. Version `0.8.4` keeps standard packs common-heavy
-again so low-cost packs do not print money, pulls luxury's super rate down so
-it stays below sealed market value, and pushes rare luxury toward SuperRare
-pulls. A full-run capture across normal generation packs saw no god cards from
-standard, luxury, or rare luxury packs, so the EV model no longer assumes a
-normal-pack god chance.
+rare luxury high variance. The current odds keep standard packs common-heavy,
+pull luxury's super rate down, and push rare luxury toward SuperRare pulls. A
+full-run capture across normal generation packs saw no god cards from standard,
+luxury, or rare luxury packs, so the EV model no longer assumes a normal-pack
+god chance.
 
 ### Rarity Values
 

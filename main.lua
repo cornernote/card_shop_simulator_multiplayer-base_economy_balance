@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.8.4",
+    version     = "0.8.5",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -41,27 +41,27 @@ local CONFIG = {
     },
 
     card_values = {
-        holiday_rare = { min = 420.00, step = 250.00 },
-        holiday_super = 900.00,
+        holiday_rare = { min = 378.00, step = 225.00 },
+        holiday_super = 810.00,
         souvenir_low = 3.00,
         souvenir_high = 6.00,
-        god = 46.00,
+        god = 41.40,
         curves = {
             Common = {
                 low_gen_max = 2,
-                low = { in_low = 0.85, in_high = 1.40, out_low = 2.40, out_low_gen = 0.50, out_high = 3.50, out_high_gen = 0.62 },
-                base = { in_low = 0.85, in_high = 1.40, out_low = 1.30, out_low_gen = 0.22, out_high = 2.45, out_high_gen = 0.34 },
+                low = { in_low = 0.85, in_high = 1.40, out_low = 1.80, out_low_gen = 0.38, out_high = 2.63, out_high_gen = 0.47 },
+                base = { in_low = 0.85, in_high = 1.40, out_low = 0.98, out_low_gen = 0.17, out_high = 1.84, out_high_gen = 0.26 },
             },
             UnCommon = {
                 low_gen_max = 2,
-                low = { in_low = 0.84, in_high = 1.60, out_low = 3.25, out_low_gen = 0.70, out_high = 5.00, out_high_gen = 0.88 },
-                base = { in_low = 0.84, in_high = 1.60, out_low = 2.25, out_low_gen = 0.35, out_high = 3.88, out_high_gen = 0.45 },
+                low = { in_low = 0.84, in_high = 1.60, out_low = 2.44, out_low_gen = 0.53, out_high = 3.75, out_high_gen = 0.66 },
+                base = { in_low = 0.84, in_high = 1.60, out_low = 1.69, out_low_gen = 0.26, out_high = 2.91, out_high_gen = 0.34 },
             },
             Rare = {
-                base = { in_low = 0.94, in_high = 2.30, out_low = 5.85, out_low_gen = 0.50, out_high = 10.35, out_high_gen = 0.63 },
+                base = { in_low = 0.94, in_high = 2.30, out_low = 4.68, out_low_gen = 0.40, out_high = 8.28, out_high_gen = 0.50 },
             },
             SuperRare = {
-                base = { in_low = 1.00, in_high = 1.90, out_low = 30.00, out_low_gen = 0.00, out_high = 49.00, out_high_gen = 0.00 },
+                base = { in_low = 1.00, in_high = 1.90, out_low = 24.00, out_low_gen = 0.00, out_high = 39.20, out_high_gen = 0.00 },
             },
         },
     },

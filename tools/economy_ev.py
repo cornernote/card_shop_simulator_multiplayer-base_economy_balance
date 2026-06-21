@@ -107,9 +107,9 @@ def market_generation_multiplier(card_id: int, gen: int) -> int:
 def balanced_value(card_id: int, rarity: int, current: float) -> float:
     if 1314 <= card_id <= 1323:
         if rarity == 3:
-            return 900.00
+            return 810.00
         t = clamp((card_id - 1314) / 7, 0, 1)
-        return round2(420.00 + (250.00 * t))
+        return round2(378.00 + (225.00 * t))
 
     if 9000 <= card_id < 10000:
         if current >= 6:
@@ -117,22 +117,22 @@ def balanced_value(card_id: int, rarity: int, current: float) -> float:
         return 3.00
 
     if rarity == 4 or card_id >= 100000:
-        return 46.00
+        return 41.40
 
     gen = generation_index(card_id)
 
     if rarity == 0:
         if gen <= 2:
-            return round2(scale_clamped(current, 0.85, 1.40, 2.40 + (0.50 * gen), 3.50 + (0.62 * gen)))
-        return round2(scale_clamped(current, 0.85, 1.40, 1.30 + (0.22 * gen), 2.45 + (0.34 * gen)))
+            return round2(scale_clamped(current, 0.85, 1.40, 1.80 + (0.38 * gen), 2.63 + (0.47 * gen)))
+        return round2(scale_clamped(current, 0.85, 1.40, 0.98 + (0.17 * gen), 1.84 + (0.26 * gen)))
     if rarity == 1:
         if gen <= 2:
-            return round2(scale_clamped(current, 0.84, 1.60, 3.25 + (0.70 * gen), 5.00 + (0.88 * gen)))
-        return round2(scale_clamped(current, 0.84, 1.60, 2.25 + (0.35 * gen), 3.88 + (0.45 * gen)))
+            return round2(scale_clamped(current, 0.84, 1.60, 2.44 + (0.53 * gen), 3.75 + (0.66 * gen)))
+        return round2(scale_clamped(current, 0.84, 1.60, 1.69 + (0.26 * gen), 2.91 + (0.34 * gen)))
     if rarity == 2:
-        return round2(scale_clamped(current, 0.94, 2.30, 5.85 + (0.50 * gen), 10.35 + (0.63 * gen)))
+        return round2(scale_clamped(current, 0.94, 2.30, 4.68 + (0.40 * gen), 8.28 + (0.50 * gen)))
     if rarity == 3:
-        return round2(scale_clamped(current, 1.00, 1.90, 30.00, 49.00))
+        return round2(scale_clamped(current, 1.00, 1.90, 24.00, 39.20))
 
     return round2(current)
 

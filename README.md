@@ -29,17 +29,37 @@ The goal is fun pack opening:
 
 ## Current EV
 
-Estimated `0.8.5` pack EV from `tools/economy_ev.py`:
+Estimated `0.8.7` pack EV from `tools/economy_ev.py`:
 
 | Generation | Standard EV | Standard Market ROI | Luxury EV | Luxury Market ROI | Rare Luxury EV | Rare Luxury Market ROI |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Gen 1 | 5.08 | -15.3% | 189.87 | -15.6% | 2040.32 | +13.4% |
-| Gen 2 | 11.70 | -2.5% | 388.39 | -13.7% | 4059.36 | +12.8% |
-| Gen 3 | 20.83 | +15.7% | 647.00 | -4.1% | 6772.43 | +25.4% |
-| Gen 4 | 20.01 | -16.6% | 893.08 | -0.8% | 9460.14 | +31.4% |
-| Gen 5 | 27.79 | -7.4% | 1146.34 | +1.9% | 11852.91 | +31.7% |
-| Gen 6 | 33.73 | -6.3% | 1331.67 | -1.4% | 13119.71 | +21.5% |
-| Gen 7 | 41.71 | -0.7% | 1722.59 | +9.4% | 17018.90 | +35.1% |
+| Gen 1 | 5.40 | -10.0% | 247.47 | +10.0% | 1889.39 | +5.0% |
+| Gen 2 | 10.80 | -10.0% | 494.95 | +10.0% | 3959.39 | +10.0% |
+| Gen 3 | 16.20 | -10.0% | 742.67 | +10.0% | 6211.96 | +15.0% |
+| Gen 4 | 21.60 | -10.0% | 989.91 | +10.0% | 8639.16 | +20.0% |
+| Gen 5 | 26.99 | -10.0% | 1237.13 | +10.0% | 11245.05 | +24.9% |
+| Gen 6 | 32.39 | -10.0% | 1484.85 | +10.0% | 14038.67 | +30.0% |
+| Gen 7 | 37.79 | -10.0% | 1732.97 | +10.0% | 17014.58 | +35.0% |
+
+## Estimated Old EV
+
+Estimated old/default EV using the documented vanilla booster weights, vanilla
+rarity/trait multipliers, and the original registry `CardValueMulti` values:
+
+| Generation | Standard EV | Standard Market ROI | Luxury EV | Luxury Market ROI | Rare Luxury EV | Rare Luxury Market ROI |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Gen 1 | 11.77 | +96.1% | 88.64 | -60.6% | 803.41 | -55.4% |
+| Gen 2 | 23.34 | +94.5% | 179.10 | -60.2% | 1614.27 | -55.2% |
+| Gen 3 | 38.57 | +114.3% | 290.83 | -56.9% | 2714.81 | -49.7% |
+| Gen 4 | 52.84 | +120.2% | 389.02 | -56.8% | 3719.42 | -48.3% |
+| Gen 5 | 67.06 | +123.5% | 494.35 | -56.1% | 4733.90 | -47.4% |
+| Gen 6 | 75.11 | +108.6% | 577.27 | -57.2% | 5342.50 | -50.5% |
+| Gen 7 | 95.89 | +128.3% | 736.01 | -53.3% | 7056.10 | -44.0% |
+
+The old estimate explains the uneven feel: standard packs could mathematically
+overperform sealed market value, while luxury and rare luxury packs were far
+below sealed market value unless hidden premium/card-instance variance carried
+the opening.
 
 Special pool estimates, assuming 6 cards drawn evenly from the pool:
 

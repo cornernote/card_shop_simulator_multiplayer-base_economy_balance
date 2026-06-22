@@ -64,7 +64,14 @@ TRAIT_RATES = {
 PACK_RATES = {
     "standard": {0: 0.9583, 1: 0.0372, 2: 0.0045, 3: 0.0, 4: 0.0},
     "luxury": {0: 0.10, 1: 0.34, 2: 0.50, 3: 0.06, 4: 0.0},
-    "rare_luxury": {0: 0.0, 1: 0.01, 2: 0.12, 3: 0.87, 4: 0.0},
+    "rare_luxury": {0: 0.0, 1: 0.01, 2: 0.14, 3: 0.85, 4: 0.0},
+}
+
+GEN_SCALES = {
+    0: [0.939, 0.824, 0.699, 1.017, 0.925, 0.934, 0.897],
+    1: [0.939, 0.824, 0.699, 1.017, 0.925, 0.934, 0.897],
+    2: [2.450, 2.103, 1.798, 1.629, 1.384, 1.176, 0.977],
+    3: [1.022, 1.088, 0.893, 0.846, 0.879, 1.090, 0.907],
 }
 
 SPECIAL_POOLS = {
@@ -120,19 +127,20 @@ def balanced_value(card_id: int, rarity: int, current: float) -> float:
         return 41.40
 
     gen = generation_index(card_id)
+    scale = GEN_SCALES.get(rarity, [1, 1, 1, 1, 1, 1, 1])[gen]
 
     if rarity == 0:
         if gen <= 2:
-            return round2(scale_clamped(current, 0.85, 1.40, 1.80 + (0.38 * gen), 2.63 + (0.47 * gen)))
-        return round2(scale_clamped(current, 0.85, 1.40, 0.98 + (0.17 * gen), 1.84 + (0.26 * gen)))
+            return round2(scale * scale_clamped(current, 0.85, 1.40, 1.80 + (0.38 * gen), 2.63 + (0.47 * gen)))
+        return round2(scale * scale_clamped(current, 0.85, 1.40, 0.98 + (0.17 * gen), 1.84 + (0.26 * gen)))
     if rarity == 1:
         if gen <= 2:
-            return round2(scale_clamped(current, 0.84, 1.60, 2.44 + (0.53 * gen), 3.75 + (0.66 * gen)))
-        return round2(scale_clamped(current, 0.84, 1.60, 1.69 + (0.26 * gen), 2.91 + (0.34 * gen)))
+            return round2(scale * scale_clamped(current, 0.84, 1.60, 2.44 + (0.53 * gen), 3.75 + (0.66 * gen)))
+        return round2(scale * scale_clamped(current, 0.84, 1.60, 1.69 + (0.26 * gen), 2.91 + (0.34 * gen)))
     if rarity == 2:
-        return round2(scale_clamped(current, 0.94, 2.30, 4.68 + (0.40 * gen), 8.28 + (0.50 * gen)))
+        return round2(scale * scale_clamped(current, 0.94, 2.30, 4.68 + (0.40 * gen), 8.28 + (0.50 * gen)))
     if rarity == 3:
-        return round2(scale_clamped(current, 1.00, 1.90, 24.00, 39.20))
+        return round2(scale * scale_clamped(current, 1.00, 1.90, 20.00, 54.00))
 
     return round2(current)
 

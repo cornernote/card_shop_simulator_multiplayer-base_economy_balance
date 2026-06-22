@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.8.5",
+    version     = "0.8.7",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -29,7 +29,7 @@ local CONFIG = {
         -- 0 = standard, 1 = deluxe/luxury, 2 = luxury/rare luxury.
         [0] = { Common = 0.9583, UnCommon = 0.0372, Rare = 0.0045, SuperRare = 0.0, God = 0.0 },
         [1] = { Common = 0.10, UnCommon = 0.34, Rare = 0.50, SuperRare = 0.06, God = 0.0 },
-        [2] = { Common = 0.0, UnCommon = 0.01, Rare = 0.12, SuperRare = 0.87, God = 0.0 },
+        [2] = { Common = 0.0, UnCommon = 0.01, Rare = 0.14, SuperRare = 0.85, God = 0.0 },
     },
 
     trait_rates = {
@@ -46,6 +46,12 @@ local CONFIG = {
         souvenir_low = 3.00,
         souvenir_high = 6.00,
         god = 41.40,
+        gen_scales = {
+            Common = { 0.939, 0.824, 0.699, 1.017, 0.925, 0.934, 0.897 },
+            UnCommon = { 0.939, 0.824, 0.699, 1.017, 0.925, 0.934, 0.897 },
+            Rare = { 2.450, 2.103, 1.798, 1.629, 1.384, 1.176, 0.977 },
+            SuperRare = { 1.022, 1.088, 0.893, 0.846, 0.879, 1.090, 0.907 },
+        },
         curves = {
             Common = {
                 low_gen_max = 2,
@@ -61,7 +67,7 @@ local CONFIG = {
                 base = { in_low = 0.94, in_high = 2.30, out_low = 4.68, out_low_gen = 0.40, out_high = 8.28, out_high_gen = 0.50 },
             },
             SuperRare = {
-                base = { in_low = 1.00, in_high = 1.90, out_low = 24.00, out_low_gen = 0.00, out_high = 39.20, out_high_gen = 0.00 },
+                base = { in_low = 1.00, in_high = 1.90, out_low = 20.00, out_low_gen = 0.00, out_high = 54.00, out_high_gen = 0.00 },
             },
         },
     },
@@ -175,6 +181,13 @@ local function apply_curve(current, gen, curve)
         curve.out_low + (curve.out_low_gen * gen),
         curve.out_high + (curve.out_high_gen * gen)
     ))
+end
+
+local function apply_gen_scale(value, rarity_name_value, gen)
+    local scales = CONFIG.card_values.gen_scales
+    local by_rarity = scales and scales[rarity_name_value] or nil
+    local scale = by_rarity and by_rarity[gen + 1] or 1
+    return round2(value * scale)
 end
 
 local function get_card(registry, card_id)
@@ -342,10 +355,10 @@ local function balanced_value(card_id, rarity, current)
 
     if config then
         if config.low and config.low_gen_max and gen <= config.low_gen_max then
-            return apply_curve(current, gen, config.low)
+            return apply_gen_scale(apply_curve(current, gen, config.low), name, gen)
         end
         if config.base then
-            return apply_curve(current, gen, config.base)
+            return apply_gen_scale(apply_curve(current, gen, config.base), name, gen)
         end
     end
 

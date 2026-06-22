@@ -85,43 +85,28 @@ There are two useful ROI lenses:
 Use pack-value ROI for tuning the intended pack economy. Use cash ROI to detect
 whether opening packs is an easy money exploit.
 
-For standard packs:
+For normal packs:
 
-- Most common/uncommon packs should feel okay to open.
-- Opening a pack and selling the cards can make a bit extra versus purchase
-  cost.
-- Opened value should usually remain below the sealed pack's market value.
-- A rare or super-rare hit can push a pack into profit.
+- Standard packs should feel okay to open without becoming a reliable sealed
+  market-value exploit.
+- Luxury packs should be close to sealed-pack market value, sometimes above,
+  with fewer bad-feeling misses.
+- Rare luxury packs should be the clear open-over-sell chase tier, but not an
+  unlimited money printer.
+- Free map cards and achievement rewards add extra card supply, so pack EV
+  should leave room for those other sources.
 
-Working standard-pack ROI targets:
+Current `0.8.5` pack-value ROI targets are approximate feel targets:
 
-| Generation | Target Cash ROI | Equivalent Pack-Value ROI |
-| --- | ---: | ---: |
-| Gen 1 | +40% to +80% | -30% to -10% |
-| Gen 2 | +10% to +35% | -45% to -32.5% |
-| Gen 3 | +10% to +35% | -45% to -32.5% |
-| Gen 4 | 0% to +30% | -50% to -35% |
-| Gen 5 | 0% to +30% | -50% to -35% |
-| Gen 6 | 0% to +30% | -50% to -35% |
-| Gen 7 | 0% to +30% | -50% to -35% |
+| Pack Type | Target Pack-Value ROI |
+| --- | --- |
+| Standard | Around sealed market value, generally below except some mid-gen bumps |
+| Luxury | Around sealed market value, slightly above in later gens |
+| Rare Luxury | Above sealed market value by a modest-to-strong margin |
 
-These standard-pack targets assume the player experience should reward opening
-packs without making opened cards consistently beat the sealed pack market
-value. Premium tiers use lower market multipliers, so their pack-value ROI needs
-to be read against the tier-specific market multiplier.
-
-For luxury and rare luxury packs, the ROI target is not yet set because their
-value depends on pack-specific rarity, foil, or variant rules that are not
-visible through the safe registry data.
-
-Current working target for premium packs:
-
-- Luxury packs should usually lose money unless they hit strong hidden premium
-  variants.
-- Rare luxury packs can behave like chase/lottery packs, where expected loss is
-  acceptable if the rare hits are exciting.
-- Do not raise normal card values to make luxury or rare luxury packs break
-  even, because that would break shelf-sale balance.
+These targets assume final in-game outcomes also include shelf-slot limits, cat
+sales at roughly `70-80%` market value, free map cards, achievement rewards, and
+hidden premium/frame variance.
 
 ## Current Balanced Value Estimate
 

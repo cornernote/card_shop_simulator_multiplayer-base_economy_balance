@@ -17,14 +17,38 @@
 
 [h2]=== BALANCE TARGET ===[/h2]
 
-The goal is not strict anti-profit balance. The goal is that opening packs is fun:
+The goal is not strict anti-profit balance. The goal is that opening packs is fun without turning packs into reliable money printers:
 
 [list]
-[*]Standard packs can make a bit extra versus purchase cost, but should usually stay below sealed market value.
-[*]Opened cards should usually still be below sealed pack market value.
-[*]Rare and super-rare pulls should feel good.
-[*]Luxury and rare luxury packs stay higher variance, but rarity and trait rates are smoothed.
+[*]Standard packs should feel okay to open without becoming a reliable sealed-value exploit.
+[*]Luxury packs sit close to sealed-pack market value, sometimes above.
+[*]Rare luxury packs are the clear open-over-sell chase tier.
+[*]Holiday/event packs remain premium because they are drops, not ordinary shop purchases.
+[*]The tuning leaves room for free map cards, achievement rewards, limited sale slots, and cat sales below market value.
 [/list]
+
+[h2]=== CURRENT EV ESTIMATE ===[/h2]
+
+Estimated v0.8.5 pack EV from the included EV helper:
+
+[code]
+Gen | Standard EV / Market ROI | Luxury EV / Market ROI | Rare Luxury EV / Market ROI
+1   | 5.08  / -15.3%           | 189.87 / -15.6%        | 2040.32  / +13.4%
+2   | 11.70 / -2.5%            | 388.39 / -13.7%        | 4059.36  / +12.8%
+3   | 20.83 / +15.7%           | 647.00 / -4.1%         | 6772.43  / +25.4%
+4   | 20.01 / -16.6%           | 893.08 / -0.8%         | 9460.14  / +31.4%
+5   | 27.79 / -7.4%            | 1146.34 / +1.9%        | 11852.91 / +31.7%
+6   | 33.73 / -6.3%            | 1331.67 / -1.4%        | 13119.71 / +21.5%
+7   | 41.71 / -0.7%            | 1722.59 / +9.4%        | 17018.90 / +35.1%
+[/code]
+
+Special pool estimates, assuming 6 cards drawn evenly from the pool:
+
+[code]
+God/divine:              24178.01 EV
+Holiday/Halloween:      21057.86 EV
+Souvenir/commemorative:    324.04 EV
+[/code]
 
 [h2]=== COMPATIBILITY ===[/h2]
 

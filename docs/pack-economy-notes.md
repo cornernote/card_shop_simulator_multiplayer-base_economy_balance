@@ -96,13 +96,13 @@ For normal packs:
 - Free map cards and achievement rewards add extra card supply, so pack EV
   should leave room for those other sources.
 
-Current `0.8.7` pack-value ROI targets are explicit EV rails:
+Current `0.8.8` pack-value ROI targets are explicit EV rails:
 
 | Pack Type | Target Pack-Value ROI |
 | --- | --- |
-| Standard | About `-10%` versus sealed market value |
-| Luxury | About `+10%` versus sealed market value |
-| Rare Luxury | Starts near `+5%` in Gen 1 and rises about `+5%` per generation |
+| Standard | About `-20%` versus sealed market value |
+| Luxury | Starts near `+4%` in Gen 1 and rises about `+2%` per generation |
+| Rare Luxury | Starts near `+0%` in Gen 1 and rises about `+4%` per generation |
 
 These targets assume final in-game outcomes also include shelf-slot limits, cat
 sales at roughly `70-80%` market value, free map cards, achievement rewards, and
@@ -133,70 +133,72 @@ It mirrors the mod constants from `main.lua` and reads
 `GenMTG/docs/current-card-inventory.tsv`. Treat its output as a tuning guide,
 then confirm with in-game pack samples.
 
-The immediate test target for `0.8.7` is:
+The immediate test target for `0.8.8` is:
 
 | Pack Type | Desired Feel |
 | --- | --- |
-| Standard | Cheap and common-heavy, about `-10%` versus sealed market value |
-| Luxury | About `+10%` versus sealed market value across all gens |
-| Rare Luxury | Premium chase tier, starting about `+5%` and rising about `+5%` per gen |
+| Standard | Cheap and common-heavy, about `-20%` versus sealed market value |
+| Luxury | Modest open-over-sell tier, starting about `+4%` and rising about `+2%` per gen |
+| Rare Luxury | Premium chase tier, starting about `+0%` and rising about `+4%` per gen |
 
 The target is based on player liquidity and total economy pressure, not pure
 market value. A sealed pack is easy to sell, while opened cards compete for
 limited card-sale slots and overflow cards may go to the cat at roughly
 `70-80%` of market value. However, free map cards and achievement rewards also
 feed the card economy, so normal packs should not all sit far above sealed-pack
-market value. Version `0.8.7` keeps pack opening attractive, keeps the
-`0.8.5` anti-printer trim, adds more variance to rare luxury outcomes, and uses
-per-generation scaling so each pack tier follows explicit ROI rails.
+market value. Version `0.8.8` keeps pack opening attractive but trims the
+previously generous rails: standard packs now sit below sealed market value,
+luxury climbs gently by generation, and rare luxury remains the premium chase
+tier without reaching the old `+35%` Gen 7 market ROI.
 
 The current theoretical EV estimate is:
 
 | Generation | Standard EV | Luxury EV | Rare Luxury EV |
 | --- | ---: | ---: | ---: |
-| Gen 1 | 5.40 | 247.47 | 1889.39 |
-| Gen 2 | 10.80 | 494.95 | 3959.39 |
-| Gen 3 | 16.20 | 742.67 | 6211.96 |
-| Gen 4 | 21.60 | 989.91 | 8639.16 |
-| Gen 5 | 26.99 | 1237.13 | 11245.05 |
-| Gen 6 | 32.39 | 1484.85 | 14038.67 |
-| Gen 7 | 37.79 | 1732.97 | 17014.58 |
+| Gen 1 | 4.80 | 234.03 | 1800.35 |
+| Gen 2 | 9.60 | 477.00 | 3743.69 |
+| Gen 3 | 14.40 | 728.94 | 5831.60 |
+| Gen 4 | 19.20 | 990.24 | 8066.99 |
+| Gen 5 | 24.00 | 1260.50 | 10446.78 |
+| Gen 6 | 28.82 | 1538.53 | 12953.68 |
+| Gen 7 | 33.58 | 1826.72 | 15620.06 |
 
 Against purchase cost:
 
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
-| Gen 1 | +80.0% | +65.0% | +26.0% |
-| Gen 2 | +80.1% | +65.0% | +32.0% |
-| Gen 3 | +80.0% | +65.0% | +38.0% |
-| Gen 4 | +80.0% | +65.0% | +44.0% |
-| Gen 5 | +79.9% | +65.0% | +49.9% |
-| Gen 6 | +79.9% | +65.0% | +56.0% |
-| Gen 7 | +80.0% | +65.0% | +62.0% |
+| Gen 1 | +60.0% | +56.0% | +20.0% |
+| Gen 2 | +60.0% | +59.0% | +24.8% |
+| Gen 3 | +60.0% | +62.0% | +29.6% |
+| Gen 4 | +60.0% | +65.0% | +34.4% |
+| Gen 5 | +60.0% | +68.1% | +39.3% |
+| Gen 6 | +60.1% | +70.9% | +43.9% |
+| Gen 7 | +59.9% | +74.0% | +48.8% |
 
 Against sealed market value:
 
 | Generation | Standard | Luxury | Rare Luxury |
 | --- | ---: | ---: | ---: |
-| Gen 1 | -10.0% | +10.0% | +5.0% |
-| Gen 2 | -10.0% | +10.0% | +10.0% |
-| Gen 3 | -10.0% | +10.0% | +15.0% |
-| Gen 4 | -10.0% | +10.0% | +20.0% |
-| Gen 5 | -10.0% | +10.0% | +24.9% |
-| Gen 6 | -10.0% | +10.0% | +30.0% |
-| Gen 7 | -10.0% | +10.0% | +35.0% |
+| Gen 1 | -20.0% | +4.0% | +0.0% |
+| Gen 2 | -20.0% | +6.0% | +4.0% |
+| Gen 3 | -20.0% | +8.0% | +8.0% |
+| Gen 4 | -20.0% | +10.0% | +12.0% |
+| Gen 5 | -20.0% | +12.0% | +16.1% |
+| Gen 6 | -19.9% | +14.0% | +19.9% |
+| Gen 7 | -20.0% | +16.0% | +24.0% |
 
-Version `0.8.7` keeps the full-run observed rates as a baseline, keeps the
+Version `0.8.8` keeps the full-run observed rates as a baseline, keeps the
 `0.8.5` anti-printer trim, and widens rare-luxury outcomes by shifting some
 weight from SuperRare to Rare and widening the SuperRare value curve. It also
-adds per-generation value scaling to hold standard near `-10%`, luxury near
-`+10%`, and rare luxury on a rising `+5%` to `+35%` market ROI curve.
+uses per-generation value scaling to hold standard near `-20%`, luxury on a
+rising `+4%` to `+16%` market ROI curve, and rare luxury on a rising `+0%` to
+`+24%` market ROI curve.
 
 The `gen_scales` table in `main.lua` is intentionally not pretty: it is the
 calibrated correction layer that preserves the underlying per-card variance
 curves while aligning each generation with the target EV rails.
 
-Version `0.8.7` keeps Holiday/Halloween cards in a premium event-drop tier.
+Version `0.8.8` keeps Holiday/Halloween cards in a premium event-drop tier.
 These packs cannot be bought directly, so their EV should sit above Gen 7 rare
 luxury while remaining slightly below divine/god packs.
 
@@ -209,7 +211,7 @@ does not expose special-pack draw tables or prices.
 | God/divine | 4 | 24178.01 | 4029.67 |
 | Holiday/Halloween | 10 | 21057.86 | 3509.64 |
 | Souvenir/commemorative | 22 | 324.04 | 54.01 |
-| Other 13xx special | 21 | 91.92 | 15.32 |
+| Other 13xx special | 21 | 211.55 | 35.26 |
 
 ## Public Modding Guide Findings
 

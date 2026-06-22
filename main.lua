@@ -1,7 +1,7 @@
 local M = {
     id          = "BaseEconomyBalance",
     name        = "Base Economy Balance",
-    version     = "0.8.7",
+    version     = "0.8.8",
     author      = "Codex",
     description = "Smooths base-game card values, pack rarity odds, and premium traits while preserving card names, art, stats, and rarity.",
 }
@@ -47,10 +47,10 @@ local CONFIG = {
         souvenir_high = 6.00,
         god = 41.40,
         gen_scales = {
-            Common = { 0.939, 0.824, 0.699, 1.017, 0.925, 0.934, 0.897 },
-            UnCommon = { 0.939, 0.824, 0.699, 1.017, 0.925, 0.934, 0.897 },
-            Rare = { 2.450, 2.103, 1.798, 1.629, 1.384, 1.176, 0.977 },
-            SuperRare = { 1.022, 1.088, 0.893, 0.846, 0.879, 1.090, 0.907 },
+            Common = { 0.824, 0.714, 0.599, 0.861, 0.775, 0.774, 0.734 },
+            UnCommon = { 0.824, 0.714, 0.599, 0.861, 0.775, 0.774, 0.734 },
+            Rare = { 2.301, 2.086, 1.889, 1.824, 1.656, 1.514, 1.362 },
+            SuperRare = { 0.974, 1.028, 0.837, 0.788, 0.814, 1.002, 0.829 },
         },
         curves = {
             Common = {
